@@ -1,7 +1,6 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
 
@@ -17,11 +16,10 @@ const Home: NextPage = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
-          MUI v5 + Next.js with TypeScript example
-          <Link href="/auth">auth</Link>
-          <Link href="/app/contests">contests</Link>
-        </Typography>
+        <Link href="/auth/sign-in">sign-in</Link>
+        <Link href="/auth/sign-up">sign-up</Link>
+        <Link href="/app/contests">contests</Link>
+        <Link href="/app/algorithms">algorithms</Link>
       </Box>
     </Container>
   );

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, Dispatch } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import userService, { SignInInfo } from '@/src/services/userService';
+import userService, { SignInInfo } from '@/src/services/user-service';
 
 interface Profile {
   id: string;

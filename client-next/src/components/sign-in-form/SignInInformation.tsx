@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, styled } from '@mui/material';
-import {
-  Field,
-  Form,
-  Formik,
-  FormikHelpers,
-  useFormik,
-  useFormikContext,
-} from 'formik';
+import { Alert, Button, styled, TextField } from '@mui/material';
+import { useFormik } from 'formik';
 import { object, string } from 'yup';
-import { useAppDispatch, useAppSelector } from '@/src/app/hook';
-import FormikTextField from '@/src/components/formik-text-field/FormikTextField';
-import { useSignInMutation } from '@/src/features/auth/authApi';
+import { AxiosError } from 'axios';
+import authService from '@/src/services/auth-service';
 
-const SForm = styled(Form)`
+const SForm = styled('form')`
   display: flex;
   flex-flow: column wrap;
   width: 100%;
@@ -47,86 +39,58 @@ const validationSchema = object().shape({
     .required('Required'),
 });
 
-const AuthError = () => {
-  // const authError = useAppSelector((store) => store.auth.error);
-  const authError = null;
-  // Submitting error
-  const [rejectedError, setRejectedError] = useState<string | null>(null);
-
-  const { setSubmitting } = useFormikContext();
-
-  useEffect(() => {
-    if (authError) {
-      setSubmitting(false);
-    }
-  }, [authError, setSubmitting]);
-
-  if (!rejectedError) return null;
-
-  return <Alert severity="error">{rejectedError}</Alert>;
-};
-
 const SignInInformation: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const [error, setError] = useState<string | null>(null);
 
-  const [signIn, result] = useSignInMutation();
-
-  const handleSubmit = (values: typeof initialValues) => {
-    signIn({ email: values.email, password: values.password })
-      .then((payload) => {
-        console.log(payload);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    if (result.error) {
-      console.log(result.error);
-    }
-  }, [result.error]);
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        await authService.signIn({ ...values });
+        // Navigate to app
+      } catch (err) {
+        const axiosErr = err as AxiosError;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (axiosErr.response?.data.message) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const message = axiosErr.response?.data?.message as string;
+          setError(message);
+        }
+      }
+    },
+  });
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ values, isSubmitting }) => (
-        <SForm>
-          <Field
-            component={FormikTextField}
-            type="email"
-            name="email"
-            value={values.email}
-            label="Email"
-            variant="outlined"
-            color="primary"
-            size="small"
-          />
-          <Field
-            component={FormikTextField}
-            type="password"
-            name="password"
-            value={values.password}
-            label="Password"
-            variant="outlined"
-            color="primary"
-            size="small"
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-          >
-            Submit
-          </Button>
-          <AuthError />
-        </SForm>
-      )}
-    </Formik>
+    <SForm onSubmit={formik.handleSubmit}>
+      <TextField
+        fullWidth
+        size="small"
+        id="email"
+        name="email"
+        label="Email"
+        value={formik.values.email}
+        onChange={formik.handleChange}
+        error={formik.touched.email && Boolean(formik.errors.email)}
+        helperText={formik.touched.email && formik.errors.email}
+      />
+      <TextField
+        fullWidth
+        size="small"
+        id="password"
+        name="password"
+        label="Password"
+        type="password"
+        value={formik.values.password}
+        onChange={formik.handleChange}
+        error={formik.touched.password && Boolean(formik.errors.password)}
+        helperText={formik.touched.password && formik.errors.password}
+      />
+      <Button color="primary" variant="contained" fullWidth type="submit">
+        Submit
+      </Button>
+      {error && <Alert severity="error">{error}</Alert>}
+    </SForm>
   );
 };
 
