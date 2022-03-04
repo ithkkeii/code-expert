@@ -7,10 +7,18 @@ interface Profile {
   email: string;
 }
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
+export const apiSlice = createApi({
+  reducerPath: 'api',
   baseQuery: axiosBaseQuery(),
+  // tagTypes: ['Profile'],
   endpoints: (builder) => ({
+    signIn: builder.mutation<Profile, { email: string; password: string }>({
+      query: (body) => ({
+        url: 'api/v1/users/sign-in',
+        method: 'POST',
+        data: body,
+      }),
+    }),
     currentUser: builder.query<Profile, void>({
       query: () => ({
         url: 'api/v1/users/current-user',
@@ -20,4 +28,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useCurrentUserQuery } = authApi;
+export const { useCurrentUserQuery, useSignInMutation } = apiSlice;

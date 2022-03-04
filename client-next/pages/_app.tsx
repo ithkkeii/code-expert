@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import * as React from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import createEmotionCache from '@/tools/create-emotion-cache';
 import theme from '@/src/theme/theme';
 import { store } from '@/src/app/store';
+import Header from '@/src/common/components/header/Header';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -29,6 +30,7 @@ const MyApp = (props: MyAppProps) => {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
+          <Header />
           <Component {...pageProps} />
         </ThemeProvider>
       </Provider>

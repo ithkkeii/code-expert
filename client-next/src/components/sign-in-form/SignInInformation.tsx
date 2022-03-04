@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Button, styled, TextField } from '@mui/material';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 import { object, string } from 'yup';
 import { AxiosError } from 'axios';
-import authService from '@/src/services/auth-service';
+import { useSignInMutation } from '@/src/features/auth/auth-api';
 
 const SForm = styled('form')`
   display: flex;
@@ -42,13 +43,17 @@ const validationSchema = object().shape({
 const SignInInformation: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
+  const [signIn, { isLoading }] = useSignInMutation();
+
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
       try {
-        await authService.signIn({ ...values });
-        // Navigate to app
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        await signIn(values);
       } catch (err) {
         const axiosErr = err as AxiosError;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -57,6 +62,17 @@ const SignInInformation: React.FC = () => {
           const message = axiosErr.response?.data?.message as string;
           setError(message);
         }
+
+        return;
+      }
+
+      // Navigate on success
+      const des = '/app/contests';
+      try {
+        await router.push(des);
+      } catch (err) {
+        // Hard refresh page if router fail for some reasons
+        window.location.href = des;
       }
     },
   });
@@ -86,7 +102,13 @@ const SignInInformation: React.FC = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <Button color="primary" variant="contained" fullWidth type="submit">
+      <Button
+        color="primary"
+        variant="contained"
+        fullWidth
+        type="submit"
+        disabled={isLoading}
+      >
         Submit
       </Button>
       {error && <Alert severity="error">{error}</Alert>}
