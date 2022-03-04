@@ -19,6 +19,7 @@ import { UserPayload } from 'src/interface';
 import { TrimStringPipe } from 'src/pipes';
 import { User } from 'src/features/users/schemas/user.schema';
 import { AuthService } from './auth.service';
+import { CurrentUserGuard } from 'src/features/auth/guards/current-user.guard';
 
 @Controller('/api/v1')
 export class AuthController {
@@ -87,10 +88,13 @@ export class AuthController {
     return;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(CurrentUserGuard)
   @Get('/users/current-user')
-  getCurrentUser(@Req() req: Request): UserPayload {
-    const user = req.user as UserPayload;
-    return user;
+  getCurrentUser(@Req() req: Request): { currentUser: UserPayload | null } {
+    const user = req.user as UserPayload | undefined;
+
+    if (user) return { currentUser: user };
+
+    return { currentUser: null };
   }
 }

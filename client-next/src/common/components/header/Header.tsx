@@ -1,15 +1,37 @@
 import React from 'react';
-import { styled } from '@mui/material';
+import { Container, styled } from '@mui/material';
 import { useCurrentUserQuery } from '@/src/features/auth/auth-api';
+import UnauthorizedOptions from '@/src/common/components/header/UnauthorizedOptions';
+import AuthorizedOptions from '@/src/common/components/header/AuthorizedOptions';
+import Logo from '@/src/common/components/header/Logo';
 
-const SHeader = styled('div')`
-  border: 1px solid red;
-`;
+const SHeader = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: theme.spacing(2),
+}));
 
 const Header = () => {
-  const { data } = useCurrentUserQuery();
+  const { data, isLoading } = useCurrentUserQuery();
 
-  return <SHeader>Header</SHeader>;
+  if (isLoading) return <SHeader>Loading</SHeader>;
+
+  if (!data) {
+    return (
+      <SHeader>
+        <Logo />
+        <UnauthorizedOptions />
+      </SHeader>
+    );
+  }
+
+  return (
+    <SHeader>
+      <Logo />
+      <AuthorizedOptions />
+    </SHeader>
+  );
 };
 
 export default Header;

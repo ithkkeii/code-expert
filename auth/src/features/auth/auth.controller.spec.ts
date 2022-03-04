@@ -243,12 +243,14 @@ describe('AuthController', () => {
       .set('Cookie', cookies)
       .expect(200);
 
-    expect(res.body.email).toEqual('test@gmail.com');
+    expect(res.body.currentUser.email).toEqual('test@gmail.com');
   });
 
-  it('should return 401 if not authenticated', async () => {
+  it('should return 200 and currentUser equal null if not authenticated', async () => {
     const res = await request(app.getHttpServer())
       .get('/api/v1/users/current-user')
-      .expect(401);
+      .expect(200);
+
+    expect(res.body.currentUser).toBeNull();
   });
 });
