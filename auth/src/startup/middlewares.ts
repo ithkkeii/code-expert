@@ -14,8 +14,26 @@ export const enhanceMiddlewares = (app: NestExpressApplication) => {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory: (errors) => new BadRequestException(errors),
-      validationError: { target: false, value: true },
+      exceptionFactory: (errors) => {
+        // Modify class-validator errors
+        const modifiedErrors = errors.map((err) => {
+          const reasons = [];
+
+          for (const constraintKey in err.constraints) {
+            const reason = err.constraints[constraintKey];
+
+            reasons.push(reason);
+          }
+
+          return {
+            property: err.property,
+            reasons,
+          };
+        });
+
+        return new BadRequestException(modifiedErrors);
+      },
+      validationError: { target: false, value: false },
     }),
   );
 };
