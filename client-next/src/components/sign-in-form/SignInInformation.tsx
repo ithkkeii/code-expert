@@ -52,8 +52,7 @@ const SignInInformation: React.FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        await signIn(values);
+        await signIn(values).unwrap();
       } catch (err) {
         const axiosErr = err as AxiosError;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

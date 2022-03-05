@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { object, string } from 'yup';
 import { Alert, styled, TextField } from '@mui/material';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { LoadingButton } from '@mui/lab';
 import PasswordMeasureBar from '@/src/components/sign-up-form/PasswordMeasureBar';
@@ -38,7 +39,7 @@ const validationSchema = object().shape({
     .required('Required'),
   name: string().min(2, 'Name is over 2 char').required('Required'),
   password: string()
-    .min(9, 'Password length is equal or over 9 char')
+    .min(1, 'Password length is equal or over 9 char')
     .max(20, 'Password length is not over 20 char')
     .required('Required'),
 });
@@ -55,22 +56,28 @@ const SignUpInformation: React.FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        await signUp(values);
-        console.log('huh');
+        await signUp(values).unwrap();
       } catch (err) {
-        console.log(err);
-        console.log('wfwf');
+        const axiosErr = err as AxiosError;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (axiosErr.response?.data.message) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const message = axiosErr.response?.data?.message as string;
+          setError(message);
+        }
         setError('Sign up fail');
+        return;
       }
 
       // Navigate on success
-      // const des = '/app/contests';
-      // try {
-      //   await router.push(des);
-      // } catch (err) {
-      //   // Hard refresh page if router fail for some reasons
-      //   window.location.href = des;
-      // }
+      const des = '/app/contests';
+      try {
+        await router.push(des);
+      } catch (err) {
+        // Hard refresh page if router fail for some reasons
+        window.location.href = des;
+      }
     },
   });
 
