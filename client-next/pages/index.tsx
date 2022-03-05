@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <Link href="/auth/sign-in">sign-in</Link>
         <Link href="/auth/sign-up">sign-up</Link>
         <Link href="/app/contests">contests</Link>
-        <Link href="/app/algorithms">algorithms</Link>
+        <Link href="/app/questions">questions</Link>
       </Box>
     </Container>
   );
