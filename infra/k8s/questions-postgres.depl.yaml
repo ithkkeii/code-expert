@@ -16,6 +16,8 @@ spec:
         - name: questions-postgres
           image: postgres
           env:
+            - name: POSTGRES_DB
+              value: "question_service"
             - name: POSTGRES_PASSWORD
               value: "12345678"
           resources:

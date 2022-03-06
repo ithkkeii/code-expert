@@ -18,6 +18,8 @@ spec:
           env:
             - name: POSTGRES_HOST
               value: questions-postgres-srv
+            - name: POSTGRES_DB
+              value: "question_service"
             - name: POSTGRES_PASSWORD
               value: "12345678"
             - name: JWT_SECRET_KEY
