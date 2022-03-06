@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: questions-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: questions
   template:
     metadata:
       labels:
-        app: auth
+        app: questions
     spec:
       containers:
-        - name: auth
-          image: ithkkeii/auth
+        - name: questions
+          image: ithkkeii/questions
           env:
-            - name: MONGO_URI
-              value: mongodb://auth-mongo-srv:27017/auth
+            - name: POSTGRES_HOST
+              value: questions-postgres-srv
+            - name: POSTGRES_PASSWORD
+              value: "12345678"
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -31,12 +33,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: questions-srv
 spec:
   selector:
-    app: auth
+    app: questions
   ports:
-    - name: auth
+    - name: questions
       protocol: TCP
       port: 3000
       targetPort: 3000
