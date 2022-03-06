@@ -17,6 +17,14 @@ build:
         manual:
           - dest: .
             src: "src/**/*.ts"
+    - image: ithkkeii/questions
+      context: questions
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "src/**/*.ts"
     - image: ithkkeii/client-next
       context: client-next
       docker:
