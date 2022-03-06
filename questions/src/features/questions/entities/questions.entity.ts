@@ -15,6 +15,12 @@ export class Question {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Column({ name: 'title', type: 'char', length: 50 })
+  title!: string;
+
+  @Column({ name: 'slug', type: 'char', length: 50 })
+  slug!: string;
+
   @Column({ name: 'problem', type: 'text' })
   problem!: string;
 
