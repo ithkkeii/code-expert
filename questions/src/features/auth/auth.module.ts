@@ -9,5 +9,6 @@ import { JwtStrategy } from 'src/features/auth/strategies/jwt.strategy';
     }),
   ],
   providers: [JwtStrategy],
+  exports: [JwtModule],
 })
 export class AuthModule {}

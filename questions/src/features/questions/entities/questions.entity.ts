@@ -15,10 +15,10 @@ export class Question {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ name: 'title', type: 'char', length: 50 })
+  @Column({ name: 'title' })
   title!: string;
 
-  @Column({ name: 'slug', type: 'char', length: 50 })
+  @Column({ name: 'slug' })
   slug!: string;
 
   @Column({ name: 'problem', type: 'text' })
