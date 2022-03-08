@@ -8,6 +8,7 @@ import { enhanceMiddlewares } from 'src/startup/middlewares';
 import ormconfig from 'ormconfig';
 import { QuestionsModule } from 'src/features/questions/questions.module';
 import { Question } from 'src/features/questions/entities/questions.entity';
+import { TestCase } from 'src/features/questions/entities/test-case.entity';
 import { CreateQuestionReq } from 'src/features/questions/dto/create-question-req.dto';
 import { Repository } from 'typeorm';
 
@@ -79,11 +80,11 @@ describe('QuestionsController', () => {
   });
 
   it('should return 200 and question content', async () => {
-    const cookie = await global.getAuthCookie();
+    const cookies = await global.getAuthCookies();
 
     await request(app.getHttpServer())
       .post('/api/v1/questions')
-      .set('Cookie', [cookie])
+      .set('Cookie', cookies)
       .send({
         title: 'bubble-sort',
         inputFormat: '',
@@ -105,11 +106,11 @@ describe('QuestionsController', () => {
   });
 
   it('should return 201 and question created if user sign in', async () => {
-    const cookie = await global.getAuthCookie();
+    const cookies = await global.getAuthCookies();
 
     return request(app.getHttpServer())
       .post('/api/v1/questions')
-      .set('Cookie', [cookie])
+      .set('Cookie', cookies)
       .send({
         title: 'test',
         inputFormat: '',
@@ -137,11 +138,11 @@ describe('QuestionsController', () => {
   });
 
   it('should return 403 (premium content) if user not sign in', async () => {
-    const cookie = await global.getAuthCookie();
+    const cookies = await global.getAuthCookies();
 
     await request(app.getHttpServer())
       .post('/api/v1/questions')
-      .set('Cookie', [cookie])
+      .set('Cookie', cookies)
       .send({
         title: 'quick-sort',
         inputFormat: '',
