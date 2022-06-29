@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: questions
-          image: ithkkeii/questions
+          image: keiracle/questions
           env:
             - name: POSTGRES_HOST
               value: questions-postgres-srv

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: ithkkeii/auth
+          image: keiracle/auth
           env:
             - name: MONGO_URI
               value: mongodb://auth-mongo-srv:27017/auth

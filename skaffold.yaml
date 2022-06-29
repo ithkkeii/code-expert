@@ -9,7 +9,7 @@ build:
     push: false
     concurrency: 1
   artifacts:
-    - image: ithkkeii/auth
+    - image: keiracle/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -17,7 +17,7 @@ build:
         manual:
           - dest: .
             src: "src/**/*.ts"
-    - image: ithkkeii/questions
+    - image: keiracle/questions
       context: questions
       docker:
         dockerfile: Dockerfile
@@ -25,7 +25,7 @@ build:
         manual:
           - dest: .
             src: "src/**/*.ts"
-    - image: ithkkeii/client-next
+    - image: keiracle/client-next
       context: client-next
       docker:
         dockerfile: Dockerfile

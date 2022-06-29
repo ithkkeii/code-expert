@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client-next
-          image: ithkkeii/client-next
+          image: keiracle/client-next
           resources:
             limits:
               memory: "1024Mi"
