@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenges-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: challenges
+  template:
+    metadata:
+      labels:
+        app: challenges
+    spec:
+      containers:
+        - name: challenges
+          image: ithkkeii/challenges
+          env:
+            - name: POSTGRES_HOST
+              value: challenges-postgres-srv
+            - name: POSTGRES_DB
+              value: "challenges_service"
+            - name: POSTGRES_PASSWORD
+              value: "12345678"
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_SECRET_KEY
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "128m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: challenges-srv
+spec:
+  selector:
+    app: challenges
+  ports:
+    - name: challenges
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenges-postgres-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: challenges-postgres
+  template:
+    metadata:
+      labels:
+        app: challenges-postgres
+    spec:
+      containers:
+        - name: challenges-postgres
+          image: postgres
+          env:
+            - name: POSTGRES_DB
+              value: "challenges_service"
+            - name: POSTGRES_PASSWORD
+              value: "12345678"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "128m"
+          ports:
+            - containerPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: challenges-postgres-srv
+spec:
+  selector:
+    app: challenges-postgres
+  ports:
+    - port: 5432
+      name: db
+      targetPort: 5432
