@@ -10,6 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
+  ignorePatterns: ['generate-typings.ts', '.eslintrc.js'],
   root: true,
   env: {
     node: true,
