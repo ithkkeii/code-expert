@@ -1,0 +1,22 @@
+enum Level {
+  Easy
+  Medium
+  Hard
+}
+
+type Challenge {
+  id: Int
+  title: String
+  slug: String
+  level: Level
+  point: Int
+  seed: String
+}
+
+type Query {
+  challenges: [Challenge]
+}
+
+type Mutation {
+  createChallenge: Challenge
+}
