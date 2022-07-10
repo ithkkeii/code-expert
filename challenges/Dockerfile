@@ -1,0 +1,15 @@
+FROM node:lts
+
+WORKDIR /app
+
+COPY package.json .
+
+COPY yarn.lock .
+
+RUN yarn install
+
+COPY . .
+
+RUN npx prisma generate
+
+CMD yarn start:dev
