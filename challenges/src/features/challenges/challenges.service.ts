@@ -6,7 +6,7 @@ export class ChallengesService {
   constructor(private prismaService: PrismaService) {}
 
   async findAll() {
-    const result = await this.prismaService.challenge.findMany();
-    return result;
+    const challenges = await this.prismaService.challenge.findMany();
+    return challenges;
   }
 }

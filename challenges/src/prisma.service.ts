@@ -9,20 +9,23 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     const reconnect = async () => {
       let count = 0;
       while (count < 20) {
-        console.log(`connecting to db... try ${count + 1} times.`);
+        console.log(`Connecting to db... try ${count + 1} times.`);
         try {
           await this.$connect();
-          console.log(`prisma is connected!`);
-          return;
+          console.log(`Database is connected!.`);
+          return true;
         } catch {
           // do nothing
           count++;
           await sleep(1000);
         }
       }
+
+      return false;
     };
 
-    reconnect();
+    const result = await reconnect();
+    if (!result) throw Error('Cannot connect to db !!!.');
   }
 
   async enableShutdownHooks(app: INestApplication) {

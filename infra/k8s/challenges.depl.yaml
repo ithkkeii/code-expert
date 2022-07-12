@@ -15,24 +15,10 @@ spec:
       containers:
         - name: challenges
           image: ithkkeii/challenges
-          env:
-            - name: DB_URL
-              value: postgresql://postgres:8p22LL2@4GmngBV@postgres-db:5432/challenges?schema=public
-            - name: POSTGRES_HOST
-              value: challenges-postgres-srv
-            - name: POSTGRES_DB
-              value: "challenges_service"
-            - name: POSTGRES_PASSWORD
-              value: "12345678"
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_SECRET_KEY
           resources:
             limits:
               memory: "512Mi"
-              cpu: "512m"
+              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service

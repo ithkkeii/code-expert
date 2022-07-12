@@ -10,6 +10,4 @@ RUN yarn install
 
 COPY . .
 
-RUN npx prisma generate
-
 CMD yarn start:dev

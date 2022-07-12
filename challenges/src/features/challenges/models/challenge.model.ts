@@ -1,13 +1,30 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { TestCase } from './test-case.model';
+import { TestInput } from './test-input.model';
 
 @ObjectType()
 export class Challenge {
-  @Field(() => Int)
-  id!: number;
+  @Field(() => ID)
+  id!: string;
 
   @Field()
-  title?: string;
+  title!: string;
 
   @Field()
-  slug?: string;
+  slug!: string;
+
+  @Field()
+  point!: number;
+
+  @Field()
+  content!: string;
+
+  @Field()
+  seed!: string;
+
+  @Field(() => [TestCase])
+  testCases!: TestCase[];
+
+  @Field(() => [TestInput])
+  testInputs!: TestInput[];
 }
