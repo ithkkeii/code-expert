@@ -135,7 +135,7 @@ Use a terminal to run a Kafka producer and consumer on a local machine.
 - Download the latest Kafka binaries and install Kafka on your local machine. [Apache Kafka download](https://kafka.apache.org/downloads)
 - Find the port of the bootstrap service:
   ```
-  kubectl get service my-cluster-kafka-external-bootstrap -n my-kafka-project -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}'
+  kubectl get service my-cluster-kafka-external-bootstrap -n kafka-cluster -o=jsonpath='{.spec.ports[0].nodePort}{"\n"}'
   ```
 - Find the IP address of the Minikube node:
 
