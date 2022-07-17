@@ -11,6 +11,9 @@
     sed -i '' 's/namespace: .*/namespace: kafka/' install/cluster-operator/*RoleBinding*.yaml
     ```
 - Create a new `kafka-cluster` namespace where you will deploy your Kafka cluster.
+  ```
+  kubectl create ns kafka-cluster
+  ```
 - Edit the `install/cluster-operator/060-Deployment-strimzi-cluster-operator.yaml` file and set the **STRIMZI_NAMESPACE** environment variable to the namespace `kafka-cluster`.
   ```
   # ...
