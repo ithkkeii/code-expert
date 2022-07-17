@@ -102,7 +102,7 @@ When you create a cluster, the Cluster Operator you deployed when installing Str
    ```
  - Wait for the cluster to be deployed:
    ```
-   kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n my-kafka-project
+   kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka-cluster
    ```
  - When your cluster is ready, create a topic to publish and subscribe from your external client.
    
