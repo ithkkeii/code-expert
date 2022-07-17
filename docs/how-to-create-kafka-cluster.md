@@ -26,7 +26,7 @@
   kubectl create -f install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n kafka-cluster
   ```
   ```
-  kubectl create -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n my-kafka-project
+  kubectl create -f install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n kafka-cluster
   ```
    *The commands create role bindings that grant permission for the Cluster Operator to access the Kafka cluster.*
 - Deploy the CRDs and role-based access control (RBAC) resources to manage the CRDs.
