@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: challenges
-          image: ithkkeii/challenges
+          image: keicorp/challenges
           resources:
             limits:
               memory: "512Mi"

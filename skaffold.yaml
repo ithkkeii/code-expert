@@ -9,7 +9,11 @@ build:
     push: false
     concurrency: 1
   artifacts:
-    - image: ithkkeii/challenges
+    - image: keicorp/challenges
       context: challenges
       docker:
         dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: "src/**/*.ts"
