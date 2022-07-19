@@ -1,46 +1,52 @@
-import { PrismaClient } from '@prisma/client';
-import { ApolloServer } from 'apollo-server';
-import { Resolvers } from './generated/resolvers-types';
-import { readFileSync } from 'fs';
+import { ApolloServer, gql } from "apollo-server";
+import { PrismaClient } from "@prisma/client";
+import { __prod__ } from "./constants";
 
-const typeDefs = readFileSync('./schema.graphql', 'utf8');
+const prisma = new PrismaClient({
+  log: __prod__ ? [] : ["query", "info", "warn", "error"],
+});
+
+const connectToDatabase = async () => {
+  console.log("Connect to the database...");
+  await prisma.$connect();
+  console.log("Database connected!");
+};
+
+const typeDefs = gql`
+  type User {
+    id: ID
+  }
+
+  type Query {
+    getUser: [User]
+  }
+`;
+
+const resolvers = {
+  Query: {
+    getUser: async () => prisma.user.findMany(),
+  },
+};
 
 const main = async () => {
-  const prisma = new PrismaClient();
+  await connectToDatabase();
 
-  const resolvers: Resolvers = {
-    Query: {
-      challenges: async (): Promise<any> => {
-        const challenges = await prisma.challenge.findMany();
-        return challenges;
-      },
-    },
-    Mutation: {
-      createChallenge: async () => {
-        const challenge = await prisma.challenge.create({
-          data: { title: 'bubble sort', slug: 'bubble-sort', point: 0 },
-        });
-
-        return {
-          id: challenge.id,
-          title: challenge.title,
-          slug: challenge.slug,
-          point: challenge.point,
-        };
-      },
-    },
-  };
-
+  // The ApolloServer constructor requires two parameters: your schema
+  // definition and your set of resolvers.
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     csrfPrevention: true,
-    cache: 'bounded',
+    cache: "bounded",
+    context: () => ({ em: prisma }),
   });
 
+  // The `listen` method launches a web server.
   server.listen().then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
 };
 
-main();
+main().finally(async () => {
+  await prisma.$disconnect();
+});

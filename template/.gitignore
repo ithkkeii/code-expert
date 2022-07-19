@@ -1,5 +1,8 @@
 # OS
 .DS_Store
 
-# Modules
+# build
+dist
+
+# modules
 node_modules

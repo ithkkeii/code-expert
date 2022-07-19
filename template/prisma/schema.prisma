@@ -10,39 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Level {
-  Easy
-  Medium
-  Hard
+model User {
+  id   Int    @id @default(autoincrement())
+  Post Post[]
 }
 
-model Challenge {
-  id         Int         @id @default(autoincrement())
-  title      String      @unique
-  slug       String?
-  level      Level       @default(Easy)
-  point      Int
-  seed       String?
-  testCases  TestCase[]
-  testInputs TestInput[]
-
-  @@map("challenges")
-}
-
-model TestCase {
-  id          Int        @id @default(autoincrement())
-  content     String
-  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
-  challengeId Int?
-
-  @@map("test_cases")
-}
-
-model TestInput {
-  id          Int        @id @default(autoincrement())
-  content     String
-  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
-  challengeId Int?
-
-  @@map("test_inputs")
+model Post {
+  id   Int  @id @default(autoincrement())
+  User User @relation(fields: [id], references: [id])
 }
