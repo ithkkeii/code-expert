@@ -1,13 +1,17 @@
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import http from 'http';
 import { __prod__ } from './constants';
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import cookieSession from 'cookie-session';
+import { readFileSync } from 'fs';
+import { Resolvers } from './generated/graphql';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { mapUsersToSchema } from './map-user-to-schema';
+import { validateLoginInput } from './validator';
 
 const prisma = new PrismaClient({
-  log: __prod__ ? [] : ['query', 'info', 'warn', 'error'],
+  log: __prod__ ? [] : ['query', 'info', 'warn', 'error']
 });
 
 const connectToDatabase = async () => {
@@ -16,20 +20,31 @@ const connectToDatabase = async () => {
   console.log('Database connected!');
 };
 
-const typeDefs = gql`
-  type User {
-    id: ID
-  }
+const typeDefs = readFileSync(require.resolve('../schema.graphql')).toString(
+  'utf-8'
+);
 
-  type Query {
-    getUser: [User]
-  }
-`;
-
-const resolvers = {
+const resolvers: Resolvers = {
   Query: {
-    getUser: async () => prisma.user.findMany(),
+    getUser: async (_, args, context) => {
+      console.log(JSON.stringify(context.req.session, null, 2));
+      const users = await prisma.user.findMany();
+      return mapUsersToSchema(users);
+    }
   },
+  Mutation: {
+    login: (_: any, args: any, context: any) => {
+      const email = args.email;
+      validateLoginInput(email);
+      context.req.session = { e: `random ${email}` };
+      return `random ${email}`;
+    }
+  }
+};
+
+const handleZodError = (err: unknown, req: any, res: any, next: any) => {
+  console.log(err);
+  next();
 };
 
 async function startApolloServer(typeDefs: any, resolvers: any) {
@@ -41,33 +56,44 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     csrfPrevention: true,
     cache: 'bounded',
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    context: ({ req }) => ({ req }),
+    context: ({ req }) => {
+      return { req };
+    }
   });
-  await server.start();
 
-  // Addition middlewares
-  app.set('trust proxy', 1);
+  // Addition middleware
+  // TODO: re check this secure
+  // setting app.set('trust proxy', true) (highly recommend only setting this for local dev, so perhaps app.set('trust proxy', process.env.NODE_ENV !== 'production') may be better)
+  // https://github.com/apollographql/apollo-server/issues/5775#issuecomment-936896592
+  app.set('trust proxy', true);
   app.use(
     cookieSession({
       name: 'session',
       keys: ['secret-key'],
-      // Cookie Options
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      secure: true,
-      sameSite: 'none',
-    }),
-  );
 
+      // Cookie Options
+      maxAge: 24 * 60 * 60 * 1000,
+      // TODO: check if this setting is secure or not
+      signed: true,
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none'
+    })
+  );
+  app.use(handleZodError);
+
+  await server.start();
   server.applyMiddleware({
     app,
     path: '/',
     cors: {
       credentials: true,
-      origin: ['http://localhost:4000', 'https://studio.apollographql.com/'],
-    },
+      origin: ['http://localhost:4000', 'https://studio.apollographql.com']
+    }
   });
+
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: 4000 }, resolve),
+    httpServer.listen({ port: 4000 }, resolve)
   );
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }

@@ -11,11 +11,7 @@ datasource db {
 }
 
 model User {
-  id   Int    @id @default(autoincrement())
-  Post Post[]
-}
-
-model Post {
-  id   Int  @id @default(autoincrement())
-  User User @relation(fields: [id], references: [id])
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
 }

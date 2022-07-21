@@ -1,0 +1,26 @@
+type User {
+  id: ID
+}
+
+type Query {
+  getUser: [User]
+}
+
+type Mutation {
+  login(email: String!): String!
+}
+
+enum Level {
+  Easy
+  Medium
+  Hard
+}
+
+type Challenge {
+  id: ID
+  title: String
+  slug: String
+  point: Int
+  content: String
+  level: Level
+}
