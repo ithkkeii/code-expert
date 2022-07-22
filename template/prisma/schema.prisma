@@ -15,3 +15,40 @@ model User {
   email String  @unique
   name  String?
 }
+
+enum Level {
+  Easy
+  Medium
+  Hard
+}
+
+model Challenge {
+  id         String      @id @default(uuid())
+  title      String      @unique
+  slug       String      @unique
+  level      Level       @default(Easy)
+  content    String      @default("")
+  point      Int         @default(0)
+  testCases  TestCase[]
+  testInputs TestInput[]
+
+  @@map("challenges")
+}
+
+model TestCase {
+  id          String     @id @default(uuid())
+  content     String     @default("")
+  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
+  challengeId String?
+
+  @@map("test_cases")
+}
+
+model TestInput {
+  id          String     @id @default(uuid())
+  content     String     @default("")
+  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
+  challengeId String?
+
+  @@map("test_inputs")
+}

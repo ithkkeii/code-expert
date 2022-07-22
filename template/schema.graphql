@@ -4,6 +4,8 @@ type User {
 
 type Query {
   getUser: [User]
+  getChallenges: [Challenge]
+  getChallenge(slug: String!): Challenge
 }
 
 type Mutation {
@@ -18,9 +20,21 @@ enum Level {
 
 type Challenge {
   id: ID
-  title: String
-  slug: String
-  point: Int
+  title: String!
+  slug: String!
+  point: Int!
+  content: String!
+  level: Level!
+  testInputs: [TestInput]!
+  testCases: [TestCase]!
+}
+
+type TestInput {
+  id: ID
   content: String
-  level: Level
+}
+
+type TestCase {
+  id: ID
+  content: String
 }

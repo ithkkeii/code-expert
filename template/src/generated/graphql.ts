@@ -1,9 +1,11 @@
+import { Level } from '../types';
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -13,6 +15,20 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
+
+export type Challenge = {
+  __typename?: 'Challenge';
+  content: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
+  level: Level;
+  point: Scalars['Int'];
+  slug: Scalars['String'];
+  testCases: Array<Maybe<TestCase>>;
+  testInputs: Array<Maybe<TestInput>>;
+  title: Scalars['String'];
+};
+
+export { Level };
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -26,7 +42,26 @@ export type MutationLoginArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getChallenge?: Maybe<Challenge>;
+  getChallenges?: Maybe<Array<Maybe<Challenge>>>;
   getUser?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryGetChallengeArgs = {
+  slug: Scalars['String'];
+};
+
+export type TestCase = {
+  __typename?: 'TestCase';
+  content?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type TestInput = {
+  __typename?: 'TestInput';
+  content?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type User = {
@@ -104,29 +139,66 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Challenge: ResolverTypeWrapper<Challenge>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Level: Level;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  TestCase: ResolverTypeWrapper<TestCase>;
+  TestInput: ResolverTypeWrapper<TestInput>;
   User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Challenge: Challenge;
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Mutation: {};
   Query: {};
   String: Scalars['String'];
+  TestCase: TestCase;
+  TestInput: TestInput;
   User: User;
 };
+
+export type ChallengeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Challenge'] = ResolversParentTypes['Challenge']> = {
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  level?: Resolver<ResolversTypes['Level'], ParentType, ContextType>;
+  point?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  testCases?: Resolver<Array<Maybe<ResolversTypes['TestCase']>>, ParentType, ContextType>;
+  testInputs?: Resolver<Array<Maybe<ResolversTypes['TestInput']>>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LevelResolvers = EnumResolverSignature<{ Easy?: any, Hard?: any, Medium?: any }, ResolversTypes['Level']>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getChallenge?: Resolver<Maybe<ResolversTypes['Challenge']>, ParentType, ContextType, RequireFields<QueryGetChallengeArgs, 'slug'>>;
+  getChallenges?: Resolver<Maybe<Array<Maybe<ResolversTypes['Challenge']>>>, ParentType, ContextType>;
   getUser?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+};
+
+export type TestCaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestCase'] = ResolversParentTypes['TestCase']> = {
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TestInputResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestInput'] = ResolversParentTypes['TestInput']> = {
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -135,8 +207,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Challenge?: ChallengeResolvers<ContextType>;
+  Level?: LevelResolvers;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  TestCase?: TestCaseResolvers<ContextType>;
+  TestInput?: TestInputResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 
