@@ -84,12 +84,22 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     context: ({ req }) => {
       return { req };
+    },
+    formatError: (err) => {
+      // We don't give the specific errors to the client.
+      if (err.message.startsWith('Database Error: ')) {
+        return new Error('Internal server error');
+      }
+
+      return err;
     }
   });
 
   // Addition middleware
   // TODO: re check this secure
-  // setting app.set('trust proxy', true) (highly recommend only setting this for local dev, so perhaps app.set('trust proxy', process.env.NODE_ENV !== 'production') may be better)
+  // setting app.set('trust proxy', true)
+  // (highly recommend only setting this for local dev,
+  // so perhaps app.set('trust proxy', process.env.NODE_ENV !== 'production') may be better)
   // https://github.com/apollographql/apollo-server/issues/5775#issuecomment-936896592
   app.set('trust proxy', true);
   app.use(

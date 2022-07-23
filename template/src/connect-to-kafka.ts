@@ -3,7 +3,7 @@ import { Kafka } from 'kafkajs';
 
 const kafka = new Kafka({
   clientId: 'random-string',
-  brokers: ['localhost:31461']
+  brokers: ['localhost:30584']
 });
 
 export const createProducer = async () => {
@@ -23,9 +23,4 @@ export const createConsumer = async () => {
   console.log('Subscribed into my-topic!');
 };
 
-export const connectToKafka = async () => {
-  const kafka = new Kafka({
-    clientId: 'random-string',
-    brokers: ['localhost:31461']
-  });
-};
+export const connectToKafka = async () => {};
