@@ -25,13 +25,6 @@ const typeDefs = readFileSync(require.resolve('../schema.graphql')).toString(
   'utf-8'
 );
 
-const failThrow = () =>
-  new Promise((resolve, reject) =>
-    setTimeout(() => {
-      reject(new Error('hahahaha'));
-    }, 3000)
-  );
-
 const resolvers: Resolvers = {
   Query: {
     getUser: async (_, args, context) => {
@@ -52,7 +45,6 @@ const resolvers: Resolvers = {
       return challenge;
     },
     getChallenges: async () => {
-      await failThrow();
       return prisma.challenge.findMany({
         include: { testCases: true, testInputs: true }
       });
@@ -86,9 +78,9 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
       return { req };
     },
     formatError: (err) => {
-      // We don't give the specific errors to the client.
-      if (err.message.startsWith('Database Error: ')) {
-        return new Error('Internal server error');
+      // Not sure if this code is already declared in apollo
+      if (err.extensions.code === 'INTERNAL_SERVER_ERROR') {
+        return new Error('Something bad happen!');
       }
 
       return err;
@@ -136,8 +128,8 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
 
 const main = async () => {
   await connectToDatabase();
-  await createProducer();
-  await createConsumer();
+  // await createProducer();
+  // await createConsumer();
 
   await startApolloServer(typeDefs, resolvers);
 };
