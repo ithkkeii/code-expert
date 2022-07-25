@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server-express';
 import { PrismaClient } from '@prisma/client';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import http from 'http';
 import { __prod__ } from './constants';
 import cookieSession from 'cookie-session';
@@ -25,7 +25,13 @@ const typeDefs = readFileSync(require.resolve('../schema.graphql')).toString(
   'utf-8'
 );
 
-const resolvers: Resolvers = {
+export type ApolloServerContext = {
+  req: Request;
+  res: Response;
+  prisma: typeof prisma;
+};
+
+const resolvers: Resolvers<ApolloServerContext> = {
   Query: {
     getUser: async (_, args, context) => {
       console.log(JSON.stringify(context.req.session, null, 2));
@@ -74,13 +80,18 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     csrfPrevention: true,
     cache: 'bounded',
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    context: ({ req }) => {
-      return { req };
-    },
+    context: ({ req, res }): ApolloServerContext => ({
+      req,
+      res,
+      prisma
+    }),
     formatError: (err) => {
       // Not sure if this code is already declared in apollo
       if (err.extensions.code === 'INTERNAL_SERVER_ERROR') {
-        return new Error('Something bad happen!');
+        return {
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        };
       }
 
       return err;
