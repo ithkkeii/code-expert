@@ -20,7 +20,7 @@ enum Level {
 model Challenge {
   id         Int         @id @default(autoincrement())
   title      String      @unique
-  slug       String?
+  slug       String      @unique
   level      Level       @default(Easy)
   point      Int
   seed       String?

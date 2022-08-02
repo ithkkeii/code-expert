@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Challenge } from 'src/features/challenges/models/challenge.model';
 import { ChallengesService } from './challenges.service';
 
@@ -7,7 +7,12 @@ export class ChallengesResolver {
   constructor(private readonly challengesService: ChallengesService) {}
 
   @Query(() => [Challenge])
-  async challenges() {
-    return this.challengesService.findAll();
+  async getChallenges() {
+    return this.challengesService.getChallenges();
+  }
+
+  @Query(() => Challenge)
+  async getChallenge(@Args('slug') slug: string) {
+    return this.challengesService.getChallenge(slug);
   }
 }

@@ -17,9 +17,6 @@ export class Challenge {
   point!: number;
 
   @Field()
-  content!: string;
-
-  @Field()
   seed!: string;
 
   @Field(() => [TestCase])
