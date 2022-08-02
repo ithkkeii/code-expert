@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Challenge } from 'src/features/challenges/models/challenge.model';
+import { SubmitSolutionArgs } from 'src/features/dto/submit-solution.args';
 import { ChallengesService } from './challenges.service';
 
 @Resolver(() => Challenge)
@@ -17,7 +18,7 @@ export class ChallengesResolver {
   }
 
   @Mutation(() => Boolean)
-  async submitSolution() {
-    return this.challengesService.submitSolution();
+  async submitSolution(@Args() submitSolutionArgs: SubmitSolutionArgs) {
+    return this.challengesService.submitSolution(submitSolutionArgs);
   }
 }
