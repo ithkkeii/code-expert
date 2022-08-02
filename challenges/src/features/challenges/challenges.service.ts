@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ChallengesService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    @Inject('CHALLENGE_SERVICE') private client: ClientKafka,
+  ) {}
 
   async getChallenges() {
     const challenges = await this.prismaService.challenge.findMany({
@@ -22,5 +27,12 @@ export class ChallengesService {
     }
 
     return challenge;
+  }
+
+  async submitSolution() {
+    await firstValueFrom(
+      this.client.emit('javascript', JSON.stringify({ hello: 'hello' })),
+    );
+    return true;
   }
 }

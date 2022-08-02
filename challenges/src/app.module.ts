@@ -1,7 +1,9 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { KafkaConfig, ProducerConfig } from 'kafkajs';
 import { join } from 'path';
 import { ChallengesModule } from './features/challenges/challenges.module';
 import { PrismaModule } from './prisma.module';

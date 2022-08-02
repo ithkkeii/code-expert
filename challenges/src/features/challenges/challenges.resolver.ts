@@ -1,4 +1,4 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Challenge } from 'src/features/challenges/models/challenge.model';
 import { ChallengesService } from './challenges.service';
 
@@ -14,5 +14,10 @@ export class ChallengesResolver {
   @Query(() => Challenge)
   async getChallenge(@Args('slug') slug: string) {
     return this.challengesService.getChallenge(slug);
+  }
+
+  @Mutation(() => Boolean)
+  async submitSolution() {
+    return this.challengesService.submitSolution();
   }
 }
