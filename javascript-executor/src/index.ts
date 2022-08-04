@@ -1,43 +1,36 @@
-import { Producer } from "kafkajs";
-import { handler } from "./handler";
-import { connectToDocker, createConsumer, createProducer } from "./start-up";
+import { Producer } from 'kafkajs';
+import { handler } from './handler';
+import { SubmittedSolutionMessage } from './interface';
+import { connectToDocker, createConsumer, createProducer } from './start-up';
 
-export interface Record {
-  guestId: string;
-  challengeId: number;
-  solution: string;
-  functionName: string;
-  testInput: { id: number; content: string };
-  testCase: { id: number; content: string };
-}
+const data =
+  '{"solution":"function diffTwoArr(a, b) {\n    \treturn a;\n    }","funcName":"diffTwoArr","guestId":"this-thing-is-unique","testCase":{"id":1,"content":"diffTwoArr([], [])"},"assertStatement":{"id":1,"content":"assert(#res).strictEqual(4)"}}';
 
 export let producer: null | Producer = null;
 
 const main = async () => {
-  console.log("Connecting to docker...");
+  console.log('Connecting to docker...');
   await connectToDocker();
 
   const consumer = await createConsumer();
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      console.log("consumes message");
+      console.log('consumes message');
 
       const value = message.value?.toString();
       if (!value) {
-        // Ignore it, we don't know what case cause this undefined
         return;
       }
-      const record: Record = JSON.parse(value);
-      console.log("record", record);
+      const submittedSolution: SubmittedSolutionMessage = JSON.parse(value);
 
       // No need to block consumer
-      handler(record);
+      handler(submittedSolution);
     },
   });
 
   // Send result
-  producer = await createProducer();
+  // producer = await createProducer();
 };
 
 main();
