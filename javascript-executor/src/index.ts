@@ -1,11 +1,17 @@
+import { Producer } from "kafkajs";
 import { handler } from "./handler";
-import { connectToDocker, createConsumer } from "./start-up";
+import { connectToDocker, createConsumer, createProducer } from "./start-up";
 
 export interface Record {
+  guestId: string;
+  challengeId: number;
   solution: string;
   functionName: string;
-  input: number;
+  testInput: { id: number; content: string };
+  testCase: { id: number; content: string };
 }
+
+export let producer: null | Producer = null;
 
 const main = async () => {
   console.log("Connecting to docker...");
@@ -23,11 +29,15 @@ const main = async () => {
         return;
       }
       const record: Record = JSON.parse(value);
+      console.log("record", record);
 
       // No need to block consumer
       handler(record);
     },
   });
+
+  // Send result
+  producer = await createProducer();
 };
 
 main();

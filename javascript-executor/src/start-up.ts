@@ -22,16 +22,19 @@ export const createProducer = async () => {
   console.log("Connecting to kafka as producer...");
   await producer.connect();
   console.log("Connected to kafka!");
+
+  return producer;
 };
 
 export const createConsumer = async () => {
+  const topicName = "javascript";
   const consumer = kafka.consumer({ groupId: "test-group" });
   console.log("Connecting to kafka as consumer...");
   await consumer.connect();
   console.log("Connected to kafka!");
-  console.log("Subscribing into my-topic...");
-  await consumer.subscribe({ topic: "my-topic", fromBeginning: true });
-  console.log("Subscribed into my-topic!");
+  console.log(`Subscribing into ${topicName}...`);
+  await consumer.subscribe({ topic: topicName, fromBeginning: true });
+  console.log(`Subscribed into ${topicName}!`);
 
   return consumer;
 };

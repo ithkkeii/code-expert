@@ -1,6 +1,6 @@
 import fs from "fs";
 import { ContainerCreateOptions } from "dockerode";
-import { Record } from ".";
+import { producer, Record } from ".";
 import { docker } from "./start-up";
 
 // Docker command
@@ -23,16 +23,24 @@ function streamToString(stream: any) {
     });
     stream.on("error", (err: any) => reject(err));
     stream.on("end", () => {
-      resolve(Buffer.concat(chunks).toString("utf8"));
+      resolve(Buffer.concat(chunks).toString("utf-8"));
     });
   });
 }
 
 export const handler = async (record: Record) => {
-  const { solution, functionName, input } = record;
+  const {
+    guestId,
+    challengeId,
+    solution,
+    // TODO: this field is not available yet
+    functionName = "sum",
+    testCase,
+    testInput,
+  } = record;
 
   // Gen specific identifier
-  const id = Date.now();
+  const id = `${Date.now()}${testCase.id}`;
   // Unique file name auto gen
   const fileName = id;
   // File name inside docker container, no need unique
@@ -62,16 +70,27 @@ export const handler = async (record: Record) => {
 
   fs.writeFileSync(
     `${__dirname}/${fileName}.js`,
-    `${solution}\nconsole.log(${functionName}(${input}))`
+    `${solution}\nconsole.log(${functionName}(${testInput.content}))`
   );
 
   const container = await docker.createContainer(execEnvOptions);
   container.attach(
     { stream: true, stdout: true, stderr: true },
     async function (err, stream) {
-      const result = await streamToString(stream);
-      console.log(result);
+      let result = await streamToString(stream);
       fs.unlinkSync(`${__dirname}/${fileName}.js`);
+
+      // Sanitize result
+      result = String(result).replace(/[^A-Z0-9]+/gi, "");
+      await producer!.send({
+        topic: "javascript-result",
+        messages: [
+          {
+            key: guestId,
+            value: JSON.stringify({ guestId, challengeId, result }),
+          },
+        ],
+      });
     }
   );
   await container.start();
