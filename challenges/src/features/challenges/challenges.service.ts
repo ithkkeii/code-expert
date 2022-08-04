@@ -1,14 +1,18 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { SubmitSolutionArgs } from 'src/features/dto/submit-solution.args';
+import { SubmitSolutionMessage } from 'src/kafka/interface';
+import { KafkaService } from 'src/kafka/kafka.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ChallengesService {
   constructor(
     private prismaService: PrismaService,
-    @Inject('CHALLENGE_SERVICE') private client: ClientKafka,
+    private kafkaService: KafkaService,
   ) {}
 
   async getChallenges() {
@@ -41,23 +45,26 @@ export class ChallengesService {
       throw new NotFoundException();
     }
 
-    const message = {
-      id: guestId,
-      challengeId,
-      solution,
-      testCases: challenge.testCases.map(({ id, content }) => ({
-        id,
-        content,
-      })),
-      testInputs: challenge.testInputs.map(({ id, content }) => ({
-        id,
-        content,
-      })),
-    };
+    const { id, testCases, testInputs } = challenge;
+    if (testCases.length !== testInputs.length) {
+      throw new BadRequestException();
+    }
 
-    await firstValueFrom(
-      this.client.emit('javascript', JSON.stringify(message)),
+    const messages: SubmitSolutionMessage[] = testCases.map((tc, index) => ({
+      guestId,
+      challengeId: id,
+      solution,
+      testCase: { id: tc.id, content: tc.content },
+      testInput: {
+        id: testInputs[index].id,
+        content: testInputs[index].content,
+      },
+    }));
+
+    await Promise.all(
+      [...messages].map((m) => this.kafkaService.submitSolution(m)),
     );
+
     return true;
   }
 }
