@@ -1,7 +1,9 @@
 import { Producer } from 'kafkajs';
 import { handler } from './handler';
 import { SubmittedSolutionMessage } from './interface';
+import { runContainer } from './run-container';
 import { connectToDocker, createConsumer, createProducer } from './start-up';
+import { consumerHandler, initExecutorFleet } from './test';
 
 const data =
   '{"solution":"function diffTwoArr(a, b) {\n    \treturn a;\n    }","funcName":"diffTwoArr","guestId":"this-thing-is-unique","testCase":{"id":1,"content":"diffTwoArr([], [])"},"assertStatement":{"id":1,"content":"assert(#res).strictEqual(4)"}}';
@@ -33,4 +35,18 @@ const main = async () => {
   // producer = await createProducer();
 };
 
-main();
+// main();
+
+const testRun = async () => {
+  await runContainer();
+  /* await initExecutorFleet();
+  const consumer = await createConsumer();
+
+  await consumer.run({
+    eachMessage: async ({ message }) => {
+      await consumerHandler(message);
+    },
+  }); */
+};
+
+testRun();

@@ -4,7 +4,7 @@ import { Kafka } from 'kafkajs';
 export const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const kafka = new Kafka({
   clientId: 'random-string',
-  brokers: ['localhost:30584'],
+  brokers: ['localhost:30584', 'localhost:31461'],
   // brokers: ["localhost:31461"],
 });
 

@@ -12,6 +12,8 @@ const prepareCode = `const _ = require('lodash');`;
 const lineCount = prepareCode.split('\n').length;
 
 // Evaluate code (not execute)
+// If code has wrong syntax, node will throw and exit.
+// Executor can has this info in stderr.
 const script = new vm.Script(`${prepareCode}\n${solutionCode}`, {
   filename: 'solution.js',
   columnOffset: -lineCount,
@@ -45,7 +47,9 @@ script.runInContext(sandboxContext);
 const stop = process.hrtime(start);
 console.log(
   `Time Taken to execute: ${((stop[0] * 1e9 + stop[1]) / 1e9).toFixed(
-    2
-  )} seconds`
+    2,
+  )} seconds`,
 );
-console.log(result);
+
+fs.writeFileSync('./report/logs.txt', logs.join('\n'));
+fs.writeFileSync('./report/result.txt', JSON.stringify(result));
