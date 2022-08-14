@@ -5,9 +5,8 @@ function fibonacci(n) {
   console.log(new Set(), new Map());
   const a = 1000;
   console.log(a);
-  // if (n < 2) return n;
-  // return fibonacci(n - 2) + fibonacci(n - 1);
-  return 1;
+  if (n < 2) return n;
+  return fibonacci(n - 2) + fibonacci(n - 1);
 }
 
-getResult(fibonacci(30));
+getResult(fibonacci(20));

@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "src/runner.js",
   "scripts": {
-    "dev": "ts-node-dev src/runner.ts",
+    "dev": "tsc --build && node dist/main.js",
     "start": "rm -rf ./dist && tsc --build && node dist/runner.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
