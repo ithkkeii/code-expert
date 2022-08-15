@@ -1,7 +1,8 @@
-import { Script } from 'vm';
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { Worker } from 'worker_threads';
-import { format } from './utils';
+import { getSolution } from './utils/get-solution';
+import { getInputs } from './utils/get-inputs';
+import { checkSyntax } from './utils/check-syntax';
 
 const createRunner = (code: string) => {
   const path = `${__dirname}/runner.js`;
@@ -20,7 +21,7 @@ const createRunner = (code: string) => {
       if (msg === 'pong') {
         timeout = setTimeout(
           () => reject({ message: 'too slow bitch!' }),
-          1000,
+          1000
         );
         return;
       }
@@ -41,64 +42,6 @@ const createRunner = (code: string) => {
   });
 };
 
-const prepareSolution_safe = async (): Promise<string | undefined> => {
-  const path = `${__dirname}/data/solution.txt`;
-  try {
-    const solution = await readFile(path, 'utf-8');
-    return solution;
-  } catch (_) {
-    return undefined;
-  }
-};
-
-const prepareInputs_safe = async (): Promise<
-  | {
-      id: string;
-      content: string;
-    }[]
-  | undefined
-> => {
-  const path = `${__dirname}/data/test-inputs.txt`;
-
-  try {
-    const data = await readFile(path, 'utf-8');
-
-    const testInputs = data.split('\n').map((d) => {
-      const [id, content] = d.split(' ');
-      return { id, content };
-    });
-
-    return testInputs;
-  } catch (_) {
-    return undefined;
-  }
-};
-
-const checkSyntax_safe = async (params: {
-  solution: string;
-  prepareCode: string;
-}): Promise<{
-  error: string | undefined;
-}> => {
-  const { solution, prepareCode } = params;
-
-  const lineCount = prepareCode.split('\n').length;
-
-  try {
-    new Script(`${prepareCode}\n${solution}`, {
-      filename: 'solution.js',
-      columnOffset: -lineCount,
-      lineOffset: -lineCount,
-    });
-  } catch (err) {
-    if (err instanceof Error && err.stack) {
-      return { error: err.stack };
-    }
-  }
-
-  return { error: undefined };
-};
-
 const writeResult_safe = async (params: { data: string; path: string }) => {
   const { data, path } = params;
 
@@ -117,7 +60,7 @@ const report = async (params: { testId: string; code: string }) => {
     const { result, logs } = await createRunner(code);
 
     process.stdout.write(
-      JSON.stringify({ id: testId, result, logs, error: '' }),
+      JSON.stringify({ id: testId, result, logs, error: '' })
     );
     // await writeResult_safe({
     //   path,
@@ -130,7 +73,7 @@ const report = async (params: { testId: string; code: string }) => {
         result: null,
         logs: [],
         error: err.message,
-      }),
+      })
     );
     // await writeResult_safe({
     //   path,
@@ -142,45 +85,39 @@ const report = async (params: { testId: string; code: string }) => {
 };
 
 const main = async () => {
-  const solution = await prepareSolution_safe();
-  if (!solution) {
-    // TODO: handle errors
-    throw new Error('handle me');
-    return;
+  const { data: solution, error: getSolutionErr } = await getSolution();
+  if (getSolutionErr !== null) {
+    throw new Error(getSolutionErr);
   }
 
-  const inputs = await prepareInputs_safe();
-  if (!inputs) {
-    // TODO: handle errors
-    throw new Error('handle me');
-    return;
+  const { data: inputs, error: getInputsErr } = await getInputs();
+  if (getInputsErr !== null) {
+    throw new Error(getInputsErr);
   }
 
-  const prepareCode = `const _ = require('lodash');`;
-
-  const { error } = await checkSyntax_safe({ solution, prepareCode });
-  if (error) {
-    // TODO: handle errors
-    throw new Error('handle me');
-    return;
+  const prePreparedCode = `const _ = require('lodash');`;
+  const { error: checkSyntaxErr } = await checkSyntax(
+    solution,
+    prePreparedCode
+  );
+  if (checkSyntaxErr !== null) {
+    throw new Error(checkSyntaxErr);
   }
 
-  inputs.forEach((input) => {
-    const { id, content } = input;
+  // inputs.forEach((input) => {
+  //   const { id, content } = input;
 
-    const execCode = `getResult(fibonacci(${content}))`;
+  //   const execCode = `getResult(fibonacci(${content}))`;
 
-    const code = `${prepareCode}\n${solution}\n${execCode}`;
+  //   const code = `${prePreparedCode}\n${solution}\n${execCode}`;
 
-    report({ testId: id, code });
-  });
-
-  return;
+  //   report({ testId: id, code });
+  // });
 };
 
 const start = process.hrtime();
 main();
 const stop = process.hrtime(start);
 console.log(
-  `Time Taken to execute: ${(stop[0] * 1e9 + stop[1]) / 1e9} seconds`,
+  `Time Taken to execute: ${(stop[0] * 1e9 + stop[1]) / 1e9} seconds`
 );
