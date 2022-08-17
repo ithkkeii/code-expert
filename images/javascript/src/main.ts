@@ -3,6 +3,7 @@ import { Worker } from 'worker_threads';
 import { getSolution } from './utils/get-solution';
 import { getInputs } from './utils/get-inputs';
 import { checkSyntax } from './utils/check-syntax';
+import { getFuncName } from './utils/get-func-name';
 
 const createRunner = (code: string) => {
   const path = `${__dirname}/runner.js`;
@@ -21,7 +22,7 @@ const createRunner = (code: string) => {
       if (msg === 'pong') {
         timeout = setTimeout(
           () => reject({ message: 'too slow bitch!' }),
-          1000
+          1000,
         );
         return;
       }
@@ -60,7 +61,7 @@ const report = async (params: { testId: string; code: string }) => {
     const { result, logs } = await createRunner(code);
 
     process.stdout.write(
-      JSON.stringify({ id: testId, result, logs, error: '' })
+      JSON.stringify({ id: testId, result, logs, error: '' }),
     );
     // await writeResult_safe({
     //   path,
@@ -73,7 +74,7 @@ const report = async (params: { testId: string; code: string }) => {
         result: null,
         logs: [],
         error: err.message,
-      })
+      }),
     );
     // await writeResult_safe({
     //   path,
@@ -95,29 +96,34 @@ const main = async () => {
     throw new Error(getInputsErr);
   }
 
+  const { data: funcName, error: getFuncNameErr } = await getFuncName();
+  if (getFuncNameErr !== null) {
+    throw new Error(getFuncNameErr);
+  }
+
   const prePreparedCode = `const _ = require('lodash');`;
   const { error: checkSyntaxErr } = await checkSyntax(
     solution,
-    prePreparedCode
+    prePreparedCode,
   );
   if (checkSyntaxErr !== null) {
     throw new Error(checkSyntaxErr);
   }
 
-  // inputs.forEach((input) => {
-  //   const { id, content } = input;
+  inputs.forEach((input) => {
+    const { id, content } = input;
 
-  //   const execCode = `getResult(fibonacci(${content}))`;
+    const execCode = `getResult(${funcName}(${content}))`;
 
-  //   const code = `${prePreparedCode}\n${solution}\n${execCode}`;
+    const code = `${prePreparedCode}\n${solution}\n${execCode}`;
 
-  //   report({ testId: id, code });
-  // });
+    report({ testId: id, code });
+  });
 };
 
 const start = process.hrtime();
 main();
 const stop = process.hrtime(start);
 console.log(
-  `Time Taken to execute: ${(stop[0] * 1e9 + stop[1]) / 1e9} seconds`
+  `Time Taken to execute: ${(stop[0] * 1e9 + stop[1]) / 1e9} seconds`,
 );

@@ -5,7 +5,7 @@ import { Script } from 'vm';
  */
 export const checkSyntax = async (
   code: string,
-  prePreparedCode = ''
+  prePreparedCode = '',
 ): Promise<{ error: string | null }> => {
   const lineCount = prePreparedCode.split('\n').length;
 
@@ -21,7 +21,6 @@ export const checkSyntax = async (
       return { error: err.stack };
     }
 
-    // TODO: make this meaningful
-    return { error: 'Unknown code error' };
+    return { error: 'Syntax error' };
   }
 };
