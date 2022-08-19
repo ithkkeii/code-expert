@@ -1,8 +1,6 @@
 import { Script } from 'vm';
+import { FailToCheckSyntaxException } from '../exceptions/fail-to-check-syntax';
 
-/**
- * This function will not throw
- */
 export const checkSyntax = async (
   code: string,
   prePreparedCode = '',
@@ -21,6 +19,6 @@ export const checkSyntax = async (
       return { error: err.stack };
     }
 
-    return { error: 'Syntax error' };
+    throw new FailToCheckSyntaxException();
   }
 };

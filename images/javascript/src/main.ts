@@ -86,20 +86,9 @@ const report = async (params: { testId: string; code: string }) => {
 };
 
 const main = async () => {
-  const { data: solution, error: getSolutionErr } = await getSolution();
-  if (getSolutionErr !== null) {
-    throw new Error(getSolutionErr);
-  }
-
-  const { data: inputs, error: getInputsErr } = await getInputs();
-  if (getInputsErr !== null) {
-    throw new Error(getInputsErr);
-  }
-
-  const { data: funcName, error: getFuncNameErr } = await getFuncName();
-  if (getFuncNameErr !== null) {
-    throw new Error(getFuncNameErr);
-  }
+  const solution = await getSolution();
+  const inputs = await getInputs();
+  const funcName = await getFuncName();
 
   const prePreparedCode = `const _ = require('lodash');`;
   const { error: checkSyntaxErr } = await checkSyntax(

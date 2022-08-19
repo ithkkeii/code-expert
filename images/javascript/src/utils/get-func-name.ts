@@ -1,21 +1,13 @@
 import { readFile } from 'fs/promises';
+import { FailToReadFileException } from '../exceptions/fail-to-read-file';
 
-/**
- * This function will not throw
- */
-export const getFuncName = async (): Promise<
-  | {
-      error: string;
-      data: null;
-    }
-  | { error: null; data: string }
-> => {
+export const getFuncName = async (): Promise<string> => {
   const path = `${process.cwd()}/dist/data/func-name.txt`;
 
   try {
     const data = await readFile(path, 'utf-8');
-    return { data, error: null };
-  } catch (err) {
-    return { data: null, error: 'Cannot read func name.' };
+    return data;
+  } catch (_) {
+    throw new FailToReadFileException();
   }
 };
