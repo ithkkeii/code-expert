@@ -5,6 +5,7 @@ export const getInputs = async (): Promise<
   {
     id: string;
     content: string;
+    assertion: string;
   }[]
 > => {
   const path = `${process.cwd()}/dist/data/test-inputs.txt`;
@@ -13,8 +14,8 @@ export const getInputs = async (): Promise<
     const data = await readFile(path, 'utf-8');
 
     const testInputs = data.split('\n').map((d) => {
-      const [id, content] = d.split(' ');
-      return { id, content };
+      const [id, content, assertion] = d.split(' ');
+      return { id, content, assertion };
     });
 
     return testInputs;
