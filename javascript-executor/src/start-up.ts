@@ -1,20 +1,17 @@
 import Docker from 'dockerode';
 import { Kafka } from 'kafkajs';
 
-export const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const kafka = new Kafka({
   clientId: 'random-string',
   brokers: ['localhost:30584', 'localhost:31461'],
   // brokers: ["localhost:31461"],
 });
 
+export const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 export const connectToDocker = async () => {
-  try {
-    await docker.ping();
-    return docker;
-  } catch (error) {
-    throw new Error('Unable to connect docker');
-  }
+  console.info('Connect to docker...');
+  await docker.ping();
+  console.info('Docker connected!');
 };
 
 export const createProducer = async () => {

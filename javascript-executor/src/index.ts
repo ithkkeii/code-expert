@@ -1,52 +1,56 @@
-import { Producer } from 'kafkajs';
-import { handler } from './handler';
-import { SubmittedSolutionMessage } from './interface';
-import { runContainer } from './run-container';
-import { connectToDocker, createConsumer, createProducer } from './start-up';
-import { consumerHandler, initExecutorFleet } from './test';
+// import { Producer } from 'kafkajs';
+// import { handler } from './handler';
+// import { SubmittedSolutionMessage } from './interface';
+// import { runContainer } from './run-container';
+// import { connectToDocker, createConsumer, createProducer } from './start-up';
+// import { consumerHandler, initExecutorFleet } from './test';
 
-const data =
-  '{"solution":"function diffTwoArr(a, b) {\n    \treturn a;\n    }","funcName":"diffTwoArr","guestId":"this-thing-is-unique","testCase":{"id":1,"content":"diffTwoArr([], [])"},"assertStatement":{"id":1,"content":"assert(#res).strictEqual(4)"}}';
+import { main } from './main';
 
-export let producer: null | Producer = null;
+main();
 
-const main = async () => {
-  console.log('Connecting to docker...');
-  await connectToDocker();
+// const data =
+//   '{"solution":"function diffTwoArr(a, b) {\n    \treturn a;\n    }","funcName":"diffTwoArr","guestId":"this-thing-is-unique","testCase":{"id":1,"content":"diffTwoArr([], [])"},"assertStatement":{"id":1,"content":"assert(#res).strictEqual(4)"}}';
 
-  const consumer = await createConsumer();
+// export let producer: null | Producer = null;
 
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      console.log('consumes message');
+// const main = async () => {
+//   console.log('Connecting to docker...');
+//   await connectToDocker();
 
-      const value = message.value?.toString();
-      if (!value) {
-        return;
-      }
-      const submittedSolution: SubmittedSolutionMessage = JSON.parse(value);
+//   const consumer = await createConsumer();
 
-      // No need to block consumer
-      handler(submittedSolution);
-    },
-  });
+//   await consumer.run({
+//     eachMessage: async ({ message }) => {
+//       console.log('consumes message');
 
-  // Send result
-  // producer = await createProducer();
-};
+//       const value = message.value?.toString();
+//       if (!value) {
+//         return;
+//       }
+//       const submittedSolution: SubmittedSolutionMessage = JSON.parse(value);
 
-// main();
+//       // No need to block consumer
+//       handler(submittedSolution);
+//     },
+//   });
 
-const testRun = async () => {
-  await runContainer();
-  /* await initExecutorFleet();
-  const consumer = await createConsumer();
+//   // Send result
+//   // producer = await createProducer();
+// };
 
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      await consumerHandler(message);
-    },
-  }); */
-};
+// // main();
 
-testRun();
+// const testRun = async () => {
+//   await runContainer();
+//   /* await initExecutorFleet();
+//   const consumer = await createConsumer();
+
+//   await consumer.run({
+//     eachMessage: async ({ message }) => {
+//       await consumerHandler(message);
+//     },
+//   }); */
+// };
+
+// testRun();
