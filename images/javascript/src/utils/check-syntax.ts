@@ -1,11 +1,9 @@
 import { Script } from 'vm';
+import { FailToCheckSyntaxException } from '../exceptions/fail-to-check-syntax';
 
-/**
- * This function will not throw
- */
 export const checkSyntax = async (
   code: string,
-  prePreparedCode = ''
+  prePreparedCode = '',
 ): Promise<{ error: string | null }> => {
   const lineCount = prePreparedCode.split('\n').length;
 
@@ -21,7 +19,6 @@ export const checkSyntax = async (
       return { error: err.stack };
     }
 
-    // TODO: make this meaningful
-    return { error: 'Unknown code error' };
+    throw new FailToCheckSyntaxException();
   }
 };

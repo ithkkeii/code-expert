@@ -1,17 +1,12 @@
 import { readFile } from 'fs/promises';
+import { FailToReadFileException } from '../exceptions/fail-to-read-file';
 
-/**
- * This function will not throw
- */
 export const getInputs = async (): Promise<
-  | {
-      error: null;
-      data: {
-        id: string;
-        content: string;
-      }[];
-    }
-  | { error: string; data: null }
+  {
+    id: string;
+    content: string;
+    assertion: string;
+  }[]
 > => {
   const path = `${process.cwd()}/dist/data/test-inputs.txt`;
 
@@ -19,12 +14,12 @@ export const getInputs = async (): Promise<
     const data = await readFile(path, 'utf-8');
 
     const testInputs = data.split('\n').map((d) => {
-      const [id, content] = d.split(' ');
-      return { id, content };
+      const [id, content, assertion] = d.split(' ');
+      return { id, content, assertion };
     });
 
-    return { error: null, data: testInputs };
+    return testInputs;
   } catch (_) {
-    return { error: 'Cannot read test-inputs', data: null };
+    throw new FailToReadFileException();
   }
 };
