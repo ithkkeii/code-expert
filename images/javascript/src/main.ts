@@ -2,6 +2,8 @@ import { getSolution } from './utils/get-solution';
 import { getInputs } from './utils/get-inputs';
 import { checkSyntax } from './utils/check-syntax';
 import { getFuncName } from './utils/get-func-name';
+import { createRunner } from './utils/create-runner';
+import { runTask } from './utils/run-task';
 import { makeAssertion } from './utils/make-assertion';
 
 const main = async () => {
@@ -10,25 +12,43 @@ const main = async () => {
   const funcName = await getFuncName();
 
   const prePreparedCode = `const _ = require('lodash');`;
-  const { error: checkSyntaxErr } = await checkSyntax(
-    solution,
-    prePreparedCode,
-  );
-  if (checkSyntaxErr !== null) {
-    throw new Error(checkSyntaxErr);
-  }
+  await checkSyntax(solution, prePreparedCode);
 
-  inputs.forEach(async (input) => {
+  let runner = createRunner();
+
+  for (const [index, input] of inputs.entries()) {
     const { id, content, assertion } = input;
-
     const code = `${prePreparedCode}\n${solution}\ngetResult(${funcName}(${content}))`;
+    const isLastTask = index === inputs.length - 1;
 
-    const result = await makeAssertion({ id, code, assertion });
+    const doneTask = await runTask({
+      runner,
+      code,
+    });
 
-    // Comm with executor
-    console.log(JSON.stringify(result));
-    console.log('---');
-  });
+    const response = makeAssertion({ id, doneTask, assertion });
+    console.log(JSON.stringify(response), '\n');
+
+    // Terminate runner & re-create when timeout occur cause runner will be hung
+    if (doneTask.error && !isLastTask) {
+      await runner.terminate();
+      runner = createRunner();
+    }
+
+    if (isLastTask) {
+      await runner.terminate();
+    }
+  }
 };
 
-main();
+// main();
+
+const starts = Date.now();
+const test = async () => {
+  const start = process.hrtime();
+  await main();
+  const stop = process.hrtime(start);
+  console.log('took: ', (stop[0] * 1e9 + stop[1]) / 1e9);
+};
+
+test();

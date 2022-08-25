@@ -1,5 +1,5 @@
-import { execRunner } from './exec-runner';
 import { expect as chaiExpect } from 'chai';
+import type { TaskSuccessRes, TaskTimeoutRes } from './run-task';
 
 type RunnerRes =
   | {
@@ -21,71 +21,57 @@ type RunnerRes =
       time: string;
     };
 
-export const makeAssertion = async ({
-  id,
-  code,
-  assertion,
-}: {
+interface Options {
   id: string;
-  code: string;
+  doneTask: TaskSuccessRes | TaskTimeoutRes;
   assertion: string;
-}): Promise<RunnerRes> => {
-  try {
-    const runnerRes = await execRunner(code);
+}
 
-    if (runnerRes.error === null) {
-      const { result, logs, time } = runnerRes;
+export const makeAssertion = (options: Options): RunnerRes => {
+  const { id, doneTask, assertion } = options;
 
-      try {
-        const expect = chaiExpect;
-        const assertFunc = new Function(
-          'expect',
-          `return ${assertion.replace('%result%', result)}`,
-        );
-        assertFunc(expect);
+  if (doneTask.error === null) {
+    const { result, logs, time } = doneTask;
 
-        return {
-          id,
-          pass: true,
-          error: null,
-          expected: result,
-          result,
-          logs,
-          time,
-        };
-      } catch (err: unknown) {
-        const expected = (err as any)?.expected;
+    try {
+      const expect = chaiExpect;
+      const assertFunc = new Function(
+        'expect',
+        `return ${assertion.replace('%result%', result)}`,
+      );
+      assertFunc(expect);
 
-        return {
-          id,
-          pass: false,
-          error: 'Wrong result',
-          expected,
-          result,
-          logs,
-          time,
-        };
-      }
-    } else {
+      return {
+        id,
+        pass: true,
+        error: null,
+        expected: result,
+        result,
+        logs,
+        time,
+      };
+    } catch (err: unknown) {
+      const expected = (err as any)?.expected;
+
       return {
         id,
         pass: false,
-        error: runnerRes.error,
-        expected: '',
-        result: '',
-        logs: [],
-        time: runnerRes.time,
+        error: 'Wrong answer',
+        expected,
+        result,
+        logs,
+        time,
       };
     }
-  } catch (err) {
+  } else {
     return {
       id,
       pass: false,
-      error: '13',
+      error: doneTask.error,
       expected: '',
       result: '',
       logs: [],
-      time: '0',
+      time: doneTask.time,
     };
   }
 };

@@ -17,7 +17,7 @@ export const format = (input: unknown) => {
   if (isMap) {
     return `Map(${input.size}) {${Array.from(
       input.entries(),
-      ([k, v]) => `${k} => ${v}`
+      ([k, v]) => `${k} => ${v}`,
     ).join(', ')}})`;
   }
 

@@ -1,5 +1,6 @@
-import { cwd, hrtime } from 'process';
-import { Worker } from 'worker_threads';
+import { cwd, hrtime, off } from 'process';
+import { Worker, workerData } from 'worker_threads';
+import { RunnerExitException } from '../exceptions/runner-exit';
 
 export const execRunner = (code: string) => {
   const path = `${cwd()}/dist/runner.js`;
@@ -23,7 +24,7 @@ export const execRunner = (code: string) => {
         const timeLimit = 500;
         timeout = setTimeout(
           () => resolve({ error: 'too slow bitch!', time: String(timeLimit) }),
-          timeLimit,
+          timeLimit
         );
         timerStart = hrtime();
         return;
