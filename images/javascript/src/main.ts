@@ -41,14 +41,4 @@ const main = async () => {
   }
 };
 
-// main();
-
-const starts = Date.now();
-const test = async () => {
-  const start = process.hrtime();
-  await main();
-  const stop = process.hrtime(start);
-  console.log('took: ', (stop[0] * 1e9 + stop[1]) / 1e9);
-};
-
-test();
+main();
