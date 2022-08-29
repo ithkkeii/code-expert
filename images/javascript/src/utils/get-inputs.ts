@@ -14,7 +14,7 @@ export const getInputs = async (): Promise<
     const data = await readFile(path, 'utf-8');
 
     const testInputs = data.split('\n').map((d) => {
-      const [id, content, assertion] = d.split(' ');
+      const [id, content, assertion] = d.split('|');
       return { id, content, assertion };
     });
 
