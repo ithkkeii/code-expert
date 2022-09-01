@@ -1,13 +1,12 @@
 import fs from 'fs';
 import { Container, ContainerCreateOptions } from 'dockerode';
-import { producer } from '.';
 import { docker } from './start-up';
 import { SubmittedSolutionMessage } from './interface';
 import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet(
   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-  10,
+  10
 );
 // Docker command
 // docker run -it -w /app -v $(pwd)/src/solution.js:/app/solution.js -i alpine sh
@@ -75,7 +74,7 @@ export const handler = async (submittedSolution: SubmittedSolutionMessage) => {
 
   fs.writeFileSync(
     `${__dirname}/${fileName}.js`,
-    `${solution}\nconsole.log(JSON.stringify(${testCase.content}))`,
+    `${solution}\nconsole.log(JSON.stringify(${testCase.content}))`
   );
 
   // let container: Container | null = null;
@@ -112,7 +111,7 @@ export const handler = async (submittedSolution: SubmittedSolutionMessage) => {
       //     },
       //   ],
       // });
-    },
+    }
   );
   await container.start();
 };

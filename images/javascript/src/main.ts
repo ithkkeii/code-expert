@@ -1,8 +1,12 @@
+import { writeFile } from 'fs/promises';
 import { getSolution } from './utils/get-solution';
 import { getInputs } from './utils/get-inputs';
 import { checkSyntax } from './utils/check-syntax';
 import { getFuncName } from './utils/get-func-name';
+import { createRunner } from './utils/create-runner';
+import { runTask } from './utils/run-task';
 import { makeAssertion } from './utils/make-assertion';
+import { cwd } from 'process';
 
 const main = async () => {
   const solution = await getSolution();
@@ -10,25 +14,36 @@ const main = async () => {
   const funcName = await getFuncName();
 
   const prePreparedCode = `const _ = require('lodash');`;
-  const { error: checkSyntaxErr } = await checkSyntax(
-    solution,
-    prePreparedCode,
-  );
-  if (checkSyntaxErr !== null) {
-    throw new Error(checkSyntaxErr);
-  }
+  await checkSyntax(solution, prePreparedCode);
 
-  inputs.forEach(async (input) => {
+  let runner = createRunner();
+  let result = '';
+  for (const [index, input] of inputs.entries()) {
     const { id, content, assertion } = input;
-
     const code = `${prePreparedCode}\n${solution}\ngetResult(${funcName}(${content}))`;
+    const isLastTask = index === inputs.length - 1;
 
-    const result = await makeAssertion({ id, code, assertion });
+    const doneTask = await runTask({
+      runner,
+      code,
+    });
 
-    // Comm with executor
-    console.log(JSON.stringify(result));
-    console.log('---');
-  });
+    // const response = makeAssertion({ id, doneTask, assertion });
+    await writeFile(
+      `${cwd()}/dist/data/result-${id}.txt`,
+      JSON.stringify({ id, ...doneTask }),
+    );
+
+    // Terminate runner & re-create when timeout occur cause runner will be hung
+    if (doneTask.error && !isLastTask) {
+      await runner.terminate();
+      runner = createRunner();
+    }
+
+    if (isLastTask) {
+      await runner.terminate();
+    }
+  }
 };
 
 main();
