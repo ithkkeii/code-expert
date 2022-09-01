@@ -1,3 +1,4 @@
+import { writeFile } from 'fs/promises';
 import { getSolution } from './utils/get-solution';
 import { getInputs } from './utils/get-inputs';
 import { checkSyntax } from './utils/check-syntax';
@@ -5,6 +6,7 @@ import { getFuncName } from './utils/get-func-name';
 import { createRunner } from './utils/create-runner';
 import { runTask } from './utils/run-task';
 import { makeAssertion } from './utils/make-assertion';
+import { cwd } from 'process';
 
 const main = async () => {
   const solution = await getSolution();
@@ -15,7 +17,7 @@ const main = async () => {
   await checkSyntax(solution, prePreparedCode);
 
   let runner = createRunner();
-
+  let result = '';
   for (const [index, input] of inputs.entries()) {
     const { id, content, assertion } = input;
     const code = `${prePreparedCode}\n${solution}\ngetResult(${funcName}(${content}))`;
@@ -26,8 +28,11 @@ const main = async () => {
       code,
     });
 
-    const response = makeAssertion({ id, doneTask, assertion });
-    console.log(JSON.stringify(response), '\n');
+    // const response = makeAssertion({ id, doneTask, assertion });
+    await writeFile(
+      `${cwd()}/dist/data/result-${id}.txt`,
+      JSON.stringify({ id, ...doneTask }),
+    );
 
     // Terminate runner & re-create when timeout occur cause runner will be hung
     if (doneTask.error && !isLastTask) {

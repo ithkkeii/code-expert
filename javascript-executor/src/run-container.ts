@@ -1,69 +1,76 @@
-import { writeFile, unlink, mkdir } from 'fs/promises';
-import { Container, ContainerCreateOptions } from 'dockerode';
+import { hrtime, cwd } from 'process';
+import { readFile } from 'fs/promises';
+import { ContainerCreateOptions } from 'dockerode';
 import { docker } from './start-up';
 import { randName } from './utils/rand-name';
 
-const image = 'node:16-alpine';
-const userCodeFilename = 'solution';
-const containerName = `js_${randName()}`;
-const workingDir = '/app';
-const tempDir = `/temp/${new Date().getDate()}`;
-const userId = 1;
-// This code send from client, for ban user from multiple submit times.
-// user can submit and change challenge to another submit
-// w/o this code it's unable for client to know if result is correctly mapped.
-const executionCode = randName();
+interface ExecRes {
+  id: number;
+  result: string | number;
+  logs: string[];
+  error: string | null;
+  time: string;
+}
 
-const inputs = ['1', '5', '10', '15'];
+const waitFile = async (path: string) => {
+  return new Promise<string>((resolve, reject) => {
+    // console.log('create interval');
+    const interval = setInterval(async () => {
+      // console.log('check');
+      try {
+        const data = await readFile(path);
+        clearInterval(interval);
+        // console.log('clear interval');
+        resolve(data.toString('utf-8'));
+        return;
+      } catch (err) {
+        // Do nothing
+      }
+    }, 50);
 
-const solutionData = `function fibonacci(n) {
-  console.log('');
-  console.log('hi there', 'there', 1);
-  console.log(new Map());
-  console.log(new Set(), new Map());
-  const a = 1000;
-  console.log(a);
-  // if (n < 2) return n;
-  // return fibonacci(n - 2) + fibonacci(n - 1);
-  return 1;
-}`;
-
-export const runContainer = async () => {
-  const solutionFileDir = `${__dirname}${tempDir}/${userId}/${executionCode}/${userCodeFilename}.js`;
-  const inputFileDir = `${__dirname}${tempDir}/${userId}/${executionCode}/inputs.txt`;
-  await mkdir(`${__dirname}${tempDir}/${userId}/${executionCode}`, {
-    recursive: true,
+    // const timeout = setTimeout(() => {
+    //   clearTimeout(timeout);
+    //   reject('time out');
+    // }, 30000);
   });
-  await writeFile(solutionFileDir, solutionData);
-  await writeFile(inputFileDir, inputs.join('\n'));
+};
 
-  console.time('create');
-  console.timeLog('create');
-  const [error, container]: [any, Container] = await docker.run(
-    image,
-    ['echo', 'hi'],
-    // ['node', `${userCodeFilename}.js`],
-    process.stdout,
-    {
-      name: containerName,
-      WorkingDir: workingDir,
-      // HostConfig: {
-      //   CpuPeriod: 100000,
-      //   CpuQuota: 20000,
-      //   AutoRemove: false,
-      //   Mounts: [
-      //     {
-      //       Target: `${workingDir}/${userCodeFilename}.js`,
-      //       Source: mountedFilename,
-      //       Type: 'bind',
-      //       ReadOnly: true,
-      //     },
-      //   ],
-      // },
-    } as ContainerCreateOptions,
-    {},
+export const runContainer = async ({
+  dataPath,
+  inputIds,
+}: {
+  dataPath: string;
+  inputIds: number[];
+}): Promise<ExecRes[]> => {
+  const options: ContainerCreateOptions = {
+    Image: 'js-runner',
+    AttachStdout: true,
+    name: `JS_${randName()}`,
+    WorkingDir: '/app',
+    HostConfig: {
+      CpuPeriod: 100000,
+      CpuQuota: 50000,
+      AutoRemove: true,
+      Mounts: [
+        {
+          Target: `/app/dist/data`,
+          Source: dataPath,
+          Type: 'bind',
+          ReadOnly: false,
+        },
+      ],
+    },
+  };
+
+  const container = await docker.createContainer(options);
+  await container.start();
+
+  // TODO: Split it to multiple response & format result if fail (file never generate)
+  // TODO: JSON.parse will fail if data is not json style
+  const result = await Promise.all(
+    inputIds.map((i) => waitFile(`${dataPath}/result-${i}.txt`)),
   );
-  console.timeLog('create');
-  console.timeEnd('create');
-  console.log(container.id);
+  // @ts-ignore
+  return result.map((r) => JSON.parse(r) as ExecRes);
+  return [];
 };
