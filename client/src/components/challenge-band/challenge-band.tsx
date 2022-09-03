@@ -21,7 +21,6 @@ const ChallengeBand: React.FC<Props> = (props) => {
     'bg-blue-500': level === 'medium',
     'bg-red-500': level === 'hard',
   });
-  console.log(levelClassNames);
 
   // TODO: margin bottom should not be used
   return (
