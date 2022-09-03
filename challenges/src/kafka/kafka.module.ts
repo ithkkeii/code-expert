@@ -13,8 +13,7 @@ import { KafkaConfig, ProducerConfig } from 'kafkajs';
         options: {
           client: {
             clientId: 'challenge-srv',
-            // brokers: ['localhost:30584'],
-            brokers: ['localhost:31461'],
+            brokers: [ 'localhost:9092','localhost:31461','localhost:30584'],
           } as KafkaConfig,
           producer: {
             allowAutoTopicCreation: false,

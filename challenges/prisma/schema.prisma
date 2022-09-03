@@ -2,13 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-arm64-openssl-1.1.x"]
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 enum Level {
@@ -36,6 +38,7 @@ model TestCase {
   Challenge   Challenge? @relation(fields: [challengeId], references: [id])
   challengeId Int?
 
+  @@index([challengeId])
   @@map("test_cases")
 }
 
@@ -45,5 +48,6 @@ model TestInput {
   Challenge   Challenge? @relation(fields: [challengeId], references: [id])
   challengeId Int?
 
+  @@index([challengeId])
   @@map("test_inputs")
 }
