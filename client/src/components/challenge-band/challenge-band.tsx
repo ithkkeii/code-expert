@@ -16,9 +16,9 @@ const ChallengeBand: React.FC<Props> = (props) => {
 
   const levelClassNames = classnames({
     'h-full w-[35px] flex-shrink-0 rounded-r-md': true,
-    'bg-green-500': level === 'easy',
-    'bg-blue-500': level === 'medium',
-    'bg-red-500': level === 'hard',
+    'bg-green-500': level === 'Easy',
+    'bg-blue-500': level === 'Medium',
+    'bg-red-500': level === 'Hard',
   });
 
   // TODO: margin bottom should not be used

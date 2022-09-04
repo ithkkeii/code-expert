@@ -1,7 +1,8 @@
 import type { NextPage } from 'next';
 import Wrapper from '../src/components/wrapper';
 
-export type Level = 'easy' | 'medium' | 'hard';
+// TODO: Is it possible to have auto typed here ?
+export type Level = 'Easy' | 'Medium' | 'Hard';
 
 const Home: NextPage = () => {
   return (

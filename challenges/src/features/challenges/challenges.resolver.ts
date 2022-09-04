@@ -8,12 +8,12 @@ export class ChallengesResolver {
   constructor(private readonly challengesService: ChallengesService) {}
 
   @Query(() => [Challenge])
-  async getChallenges() {
+  async challenges() {
     return this.challengesService.getChallenges();
   }
 
   @Query(() => Challenge)
-  async getChallenge(@Args('slug') slug: string) {
+  async challenge(@Args('slug') slug: string) {
     return this.challengesService.getChallenge(slug);
   }
 

@@ -5,20 +5,21 @@ import ChallengeBand from './challenge-band/challenge-band';
 
 const useChallenges = () => {
   return useQuery(['challenges'], async () => {
-    const { getChallenges } = await request(
+    const { challenges } = await request(
       'http://localhost:3000/graphql',
       gql`
         query {
-          getChallenges {
+          challenges {
             id
             title
             slug
+            level
           }
         }
       `,
     );
 
-    return getChallenges;
+    return challenges;
   });
 };
 
@@ -36,7 +37,7 @@ const Wrapper = () => {
             title={d.title}
             slug={d.title}
             like={false}
-            level="easy"
+            level={d.level}
           />
         ))}
       </div>
