@@ -13,7 +13,6 @@ interface Props {
 
 const ChallengeBand: React.FC<Props> = (props) => {
   const { title, slug, like, level } = props;
-  console.log(level);
 
   const levelClassNames = classnames({
     'h-full w-[35px] flex-shrink-0 rounded-r-md': true,
