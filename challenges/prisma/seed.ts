@@ -1,0 +1,363 @@
+import { Challenge, PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+const genSlug = (title: string) =>
+  title.toLowerCase().replace('(', '').replace(')', '').split(' ').join('-');
+
+const easyChallenges: Omit<Challenge, 'slug'>[] = [
+  {
+    id: 1,
+    title: 'Two Sum',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a, b) => {}',
+  },
+  {
+    id: 2,
+    title: 'Palindrome Number',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 3,
+    title: 'Roman to Integer',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 4,
+    title: 'Longest Common Prefix',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 5,
+    title: 'Valid Parentheses',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 6,
+    title: 'Merge Two Sorted Lists',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 7,
+    title: 'Remove Duplicates from Sorted Array',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 8,
+    title: 'Remove Element',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 9,
+    title: 'Search Insert Position',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 10,
+    title: 'Length of Last Word',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 11,
+    title: 'Remove Duplicates from Sorted List',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 12,
+    title: 'Climbing Stairs',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 13,
+    title: 'Binary Tree Inorder Traversal',
+    point: 100,
+    level: 'Easy',
+    seed: 'const main = (a) => {}',
+  },
+];
+
+const mediumChallenges: Omit<Challenge, 'slug'>[] = [
+  {
+    id: 14,
+    title: 'Add Two Numbers',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 15,
+    title: 'Longest Substring Without Repeating Characters',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 16,
+    title: 'Longest Palindromic Substring',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 17,
+    title: 'Zigzag Conversion',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 18,
+    title: 'Reverse Integer',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 19,
+    title: 'String to Integer (atoi)',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 20,
+    title: 'Container With Most Water',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 21,
+    title: 'Integer to Roman',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 22,
+    title: '3Sum',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 23,
+    title: '3Sum Closest',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 24,
+    title: 'Letter Combinations of a Phone Number',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 25,
+    title: '4Sum',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 26,
+    title: 'Remove Nth Node From End of List',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 27,
+    title: 'Generate Parentheses',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 28,
+    title: 'Swap Nodes in Pairs',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 29,
+    title: 'Find the Index of the First Occurrence in a String',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 30,
+    title: 'Divide Two Integers',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 31,
+    title: 'Next Permutation',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 32,
+    title: 'Search in Rotated Sorted Array',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 33,
+    title: 'Find First and Last Position of Element in Sorted Array',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 34,
+    title: 'Count and Say',
+    point: 200,
+    level: 'Medium',
+    seed: 'const main = (a) => {}',
+  },
+];
+
+const hardChallenges: Omit<Challenge, 'slug'>[] = [
+  {
+    id: 35,
+    title: 'Median of Two Sorted Arrays',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 36,
+    title: 'Regular Expression Matching',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 37,
+    title: 'Merge k Sorted Lists',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 38,
+    title: 'Reverse Nodes in k-Group',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 39,
+    title: 'Substring with Concatenation of All Words',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 40,
+    title: 'Longest Valid Parentheses',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 41,
+    title: 'First Missing Positive',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 42,
+    title: 'Trapping Rain Water',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 43,
+    title: 'N-Queens',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 44,
+    title: 'N-Queens 2',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 45,
+    title: 'Permutation Sequence',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 46,
+    title: 'Valid Number',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 47,
+    title: 'Text Justification',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+  {
+    id: 48,
+    title: 'Edit Distance',
+    point: 300,
+    level: 'Hard',
+    seed: 'const main = (a) => {}',
+  },
+];
+
+const main = async () => {
+  await prisma.challenge.createMany({
+    data: [...easyChallenges, ...mediumChallenges, ...hardChallenges].map(
+      (c) => ({
+        ...c,
+        slug: genSlug(c.title),
+      }),
+    ),
+  });
+};
+
+main();
