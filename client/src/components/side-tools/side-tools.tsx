@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import TabsUnstyled from '@mui/base/TabsUnstyled';
-import TabsListUnstyled from '@mui/base/TabsListUnstyled';
-import TabPanelUnstyled from '@mui/base/TabPanelUnstyled';
-import { buttonUnstyledClasses } from '@mui/base/ButtonUnstyled';
-import TabUnstyled, { tabUnstyledClasses } from '@mui/base/TabUnstyled';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
 
@@ -127,44 +122,3 @@ export function Example() {
     </div>
   );
 }
-
-const SideTools = () => {
-  const [active, setActive] = useState<typeof tools[number]>('description');
-
-  return (
-    <div>
-      <TabsUnstyled value={active}>
-        <TabsListUnstyled>
-          {tools.map((tool) => {
-            const tabCln = classNames({
-              'bg-white': tool === active,
-            });
-
-            return (
-              <TabUnstyled
-                key={tool}
-                className={`border border-b-0 py-2 px-8 capitalize ${tabCln}`}
-                onClick={() => setActive(tool)}
-              >
-                {tool}
-              </TabUnstyled>
-            );
-          })}
-        </TabsListUnstyled>
-        {tools.map((tool) => {
-          return (
-            <TabPanelUnstyled
-              key={tool}
-              value={tool}
-              className="h-full bg-white"
-            >
-              {tool} page
-            </TabPanelUnstyled>
-          );
-        })}
-      </TabsUnstyled>
-    </div>
-  );
-};
-
-export default SideTools;

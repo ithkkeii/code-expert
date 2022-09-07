@@ -14,9 +14,7 @@ const Home: NextPage = () => {
           <SideTools />
           <Example />
         </div>
-        <div className="flex-1">
-          <CodeEditor />
-        </div>
+        <div className="flex-1">{/* <CodeEditor /> */}</div>
       </div>
     </div>
   );
