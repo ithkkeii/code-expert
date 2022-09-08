@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Tab } from '@headlessui/react';
+import Description from '../description/description';
 
 const tools = ['description', 'submissions'] as const;
 const sections = ['descriptions', 'submissions'] as const;
@@ -58,7 +59,7 @@ export function Example() {
   });
 
   return (
-    <div className="w-full max-w-md px-2 py-16 sm:px-0">
+    <div className="h-full overflow-hidden overflow-y-scroll">
       <Tab.Group>
         <Tab.List className="bg-grey-200 flex space-x-1 rounded-xl p-1">
           {sections.map((section) => (
@@ -87,34 +88,7 @@ export function Example() {
                 'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
               )}
             >
-              <ul>
-                {posts.map((post) => (
-                  <li
-                    key={post.id}
-                    className="relative rounded-md p-3 hover:bg-gray-100"
-                  >
-                    <h3 className="text-sm font-medium leading-5">
-                      {post.title}
-                    </h3>
-
-                    <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
-                      <li>{post.date}</li>
-                      <li>&middot;</li>
-                      <li>{post.commentCount} comments</li>
-                      <li>&middot;</li>
-                      <li>{post.shareCount} shares</li>
-                    </ul>
-
-                    <a
-                      href="#"
-                      className={classNames(
-                        'absolute inset-0 rounded-md',
-                        'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2',
-                      )}
-                    />
-                  </li>
-                ))}
-              </ul>
+              <Description />
             </Tab.Panel>
           ))}
         </Tab.Panels>
