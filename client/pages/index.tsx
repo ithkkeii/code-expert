@@ -1,29 +1,30 @@
 import type { NextPage } from 'next';
-import Button from '../src/components/button/button';
+import Split from 'react-split';
+import CategoryTabs from '../src/components/category-tabs/category-tabs';
 import CodeEditor from '../src/components/code-editor/code-editor';
-import { Example } from '../src/components/side-tools/side-tools';
-import Wrapper from '../src/components/wrapper';
+import NavBar from '../src/components/nav-bar/nav-bar';
 
 // TODO: Is it possible to have auto typed here ?
 export type Level = 'Easy' | 'Medium' | 'Hard';
 
 const Home: NextPage = () => {
   return (
-    <div className="flex h-[100vh] w-full flex-col justify-center bg-gray-100">
-      <div className="h-[5vh] border border-red-200">Nav Bar</div>
-      <div className="flex flex-1 flex-row border border-blue-300">
-        <div className="h-[95vh] flex-1 border border-pink-300">
-          <Example />
-        </div>
-        <div className="flex flex-1 flex-col border border-black">
-          <div className="flex-1">editor</div>
-          <div className="flex items-center justify-end">
-            <Button variant="text" className="m-4">
-              Run code
-            </Button>
-            <Button>Submit</Button>
-          </div>
-        </div>
+    <div className="flex h-[100vh] w-full flex-col justify-center">
+      <div className="h-[5vh]">
+        <NavBar />
+      </div>
+      <div className="flex flex-1 flex-row">
+        <Split
+          className="flex"
+          gutter={(_, direction) => {
+            const gutter = document.createElement('div');
+            gutter.className = `gutter gutter-${direction} bg-gradient-to-b from-gray-50`;
+            return gutter;
+          }}
+        >
+          <CategoryTabs />
+          <CodeEditor />
+        </Split>
       </div>
     </div>
   );

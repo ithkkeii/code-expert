@@ -22,7 +22,8 @@
     "graphql-request": "^5.0.0",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-split": "^2.0.14"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
