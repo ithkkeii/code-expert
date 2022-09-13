@@ -10,7 +10,7 @@ const NavBar = () => {
       <div className="flex items-center px-8">
         <Image src={logo} alt="logo" width={40} height={40} />
       </div>
-      <div className="flex flex-1 items-center justify-start text-sm text-gray-600">
+      <div className="flex flex-1 items-center justify-start text-gray-600">
         <div className="px-4 hover:cursor-pointer hover:text-black">
           Explore
         </div>

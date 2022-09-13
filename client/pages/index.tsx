@@ -28,10 +28,9 @@ const Home: NextPage = () => {
           gutter={renderGutter}
         >
           {/* <CategoryTabs /> */}
-          <div>category tabs</div>
+          <div className="flex-1">category tabs</div>
           <TestCases />
         </Split>
-
         <Split
           className="flex flex-col"
           direction="vertical"
