@@ -20,14 +20,15 @@ enum Level {
 }
 
 model Challenge {
-  id         Int         @id @default(autoincrement())
-  title      String      @unique
-  slug       String      @unique
-  level      Level       @default(Easy)
-  point      Int
-  seed       String?
-  testCases  TestCase[]
-  testInputs TestInput[]
+  id            Int         @id @default(autoincrement())
+  title         String      @unique
+  slug          String      @unique
+  level         Level       @default(Easy)
+  point         Int
+  seed          String?
+  rightSolution String
+  testCases     TestCase[]
+  testInputs    TestInput[]
 
   @@map("challenges")
 }
