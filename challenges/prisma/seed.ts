@@ -11,6 +11,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a, b) => {}',
+    rightSolution: '',
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 4,
@@ -32,6 +35,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 5,
@@ -39,6 +43,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 6,
@@ -46,6 +51,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 7,
@@ -53,6 +59,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 8,
@@ -60,6 +67,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 9,
@@ -67,6 +75,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 10,
@@ -74,6 +83,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 11,
@@ -81,6 +91,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 12,
@@ -88,6 +99,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 13,
@@ -95,6 +107,7 @@ const easyChallenges: Omit<Challenge, 'slug'>[] = [
     point: 100,
     level: 'Easy',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
 ];
 
@@ -105,6 +118,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 15,
@@ -112,6 +126,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 16,
@@ -119,6 +134,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 17,
@@ -126,6 +142,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 18,
@@ -133,6 +150,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 19,
@@ -140,6 +158,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 20,
@@ -147,6 +166,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 21,
@@ -154,6 +174,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 22,
@@ -161,6 +182,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 23,
@@ -168,6 +190,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 24,
@@ -175,6 +198,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 25,
@@ -182,6 +206,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 26,
@@ -189,6 +214,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 27,
@@ -196,6 +222,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 28,
@@ -203,6 +230,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 29,
@@ -210,6 +238,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 30,
@@ -217,6 +246,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 31,
@@ -224,6 +254,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 32,
@@ -231,6 +262,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 33,
@@ -238,6 +270,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 34,
@@ -245,6 +278,7 @@ const mediumChallenges: Omit<Challenge, 'slug'>[] = [
     point: 200,
     level: 'Medium',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
 ];
 
@@ -255,6 +289,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 36,
@@ -262,6 +297,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 37,
@@ -269,6 +305,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 38,
@@ -276,6 +313,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 39,
@@ -283,6 +321,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 40,
@@ -290,6 +329,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 41,
@@ -297,6 +337,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 42,
@@ -304,6 +345,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 43,
@@ -311,6 +353,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 44,
@@ -318,6 +361,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 45,
@@ -325,6 +369,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 46,
@@ -332,6 +377,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 47,
@@ -339,6 +385,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
   {
     id: 48,
@@ -346,6 +393,7 @@ const hardChallenges: Omit<Challenge, 'slug'>[] = [
     point: 300,
     level: 'Hard',
     seed: 'const main = (a) => {}',
+    rightSolution: '',
   },
 ];
 

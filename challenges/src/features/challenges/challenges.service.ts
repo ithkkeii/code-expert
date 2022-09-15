@@ -3,6 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InterpretSolutionRes } from 'src/features/dto/interpret-solution-res';
+import { InterpretSolutionArgs } from 'src/features/dto/interpret-solution.args';
 import { SubmitSolutionArgs } from 'src/features/dto/submit-solution.args';
 import { SubmitSolutionMessage } from 'src/kafka/interface';
 import { KafkaService } from 'src/kafka/kafka.service';
@@ -32,6 +34,31 @@ export class ChallengesService {
     }
 
     return challenge;
+  }
+
+  async interpretSolution(
+    interpretSolutionArgs: InterpretSolutionArgs,
+  ): Promise<InterpretSolutionRes> {
+    const { challengeId, dataInput, lang, typedCode } = interpretSolutionArgs;
+
+    const challenge = await this.prismaService.challenge.findUnique({
+      where: { id: challengeId },
+    });
+    if (!challenge) throw new NotFoundException();
+
+    // TODO: Must be unique across data table
+    const interpretId = `${challengeId}-${Date.now()}`;
+
+    await this.kafkaService.interpretSolution({
+      challengeId,
+      dataInput,
+      typedCode,
+      interpretId: `${challengeId}-${Date.now()}`,
+      lang,
+      rightSolution: challenge.rightSolution,
+    });
+
+    return { interpretId };
   }
 
   async submitSolution(submitSolutionArgs: SubmitSolutionArgs) {

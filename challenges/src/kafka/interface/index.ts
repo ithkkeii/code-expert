@@ -11,3 +11,12 @@ export interface SubmitSolutionMessage {
     content: string;
   };
 }
+
+export interface InterpretSolutionMessage {
+  interpretId: string;
+  lang: string;
+  challengeId: number;
+  dataInput: string;
+  typedCode: string;
+  rightSolution: string;
+}

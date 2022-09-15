@@ -1,5 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Challenge } from 'src/features/challenges/models/challenge.model';
+import { InterpretSolutionRes } from 'src/features/dto/interpret-solution-res';
+import { InterpretSolutionArgs } from 'src/features/dto/interpret-solution.args';
 import { SubmitSolutionArgs } from 'src/features/dto/submit-solution.args';
 import { ChallengesService } from './challenges.service';
 
@@ -20,5 +22,12 @@ export class ChallengesResolver {
   @Mutation(() => Boolean)
   async submitSolution(@Args() submitSolutionArgs: SubmitSolutionArgs) {
     return this.challengesService.submitSolution(submitSolutionArgs);
+  }
+
+  @Mutation(() => InterpretSolutionRes)
+  async interpretSolution(
+    @Args() interpretSolutionArgs: InterpretSolutionArgs,
+  ) {
+    return this.challengesService.interpretSolution(interpretSolutionArgs);
   }
 }
