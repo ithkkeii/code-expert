@@ -1,0 +1,21 @@
+const countMaxDuplicate = (nums) => {
+    const dic = {};
+    nums.forEach(n => {
+        if (dic[n]) {
+            dic[n] += 1;
+        }
+        else {
+            dic[n] = 1;
+        }
+    });
+    let max = undefined;
+    for (const num in dic) {
+        if (max === undefined) {
+            max = Number(num);
+        }
+        if (dic[max] < dic[num]) {
+            max = Number(num);
+        }
+    }
+    return max;
+};

@@ -1,15 +1,14 @@
 import { expect } from 'chai';
+import { readFile, writeFile } from 'fs/promises';
+import { cwd } from 'process';
+import { performance } from 'perf_hooks';
 
 const data = {
   interpretId: 'random-string',
   lang: 'javascript',
   challengeId: 1,
-  dataInput: '[1,2]\n9',
   dataInputSanitizer: 'isArrayOfNum(%replace%)\nisNum(%replace%)',
   sanitizerReplacement: '%replace%',
-  typedCode: 'const twoSum = (nums, target) => 2',
-  rightSolution: 'const twoSum = (nums, target) => 1',
-  funcName: 'twoSum',
 };
 
 const isNum = (value: unknown): boolean => typeof value === 'number';
@@ -25,17 +24,31 @@ const isArrayOfNum = (values: unknown): boolean => {
   return true;
 };
 
-const main = () => {
+const main = async () => {
+  const startTime = performance.now();
+
   const {
     challengeId,
-    dataInput: dataInputStr,
     dataInputSanitizer: dataInputSanitizerStr,
     interpretId,
-    rightSolution,
-    typedCode,
     sanitizerReplacement,
-    funcName,
   } = data;
+
+  const funcName = await readFile(`${cwd()}/dist/data/func-name.txt`, {
+    encoding: 'utf-8',
+  });
+  const rightSolution = await readFile(
+    `${cwd()}/dist/data/right-solution.txt`,
+    {
+      encoding: 'utf-8',
+    }
+  );
+  const typedCode = await readFile(`${cwd()}/dist/data/typed-code.txt`, {
+    encoding: 'utf-8',
+  });
+  const dataInputStr = await readFile(`${cwd()}/dist/data/data-input.txt`, {
+    encoding: 'utf-8',
+  });
 
   const dataInput = dataInputStr.split('\n');
   const dataInputSanitizer = dataInputSanitizerStr.split('\n');
@@ -60,14 +73,25 @@ const main = () => {
     `${typedCode}; userResult = ${funcName}(${dataInputStr.replace('\n', ',')})`
   );
 
+  const resultFilePath = `${cwd()}/dist/report/result.txt`;
+
+  const took = ((performance.now() - startTime) / 1000).toFixed(6);
   try {
     expect(userResult).equal(rightResult);
+    await writeFile(
+      resultFilePath,
+      JSON.stringify({ isSuccess: true, value: userResult, took })
+    );
   } catch (err) {
-    const res = {
-      actual: userResult,
-      expect: rightResult,
-    };
-    console.log(res);
+    await writeFile(
+      resultFilePath,
+      JSON.stringify({
+        isSuccess: false,
+        actual: userResult,
+        expect: rightResult,
+        took,
+      })
+    );
   }
 };
 
