@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
+	"github.com/segmentio/kafka-go"
 )
 
 func timeout(ch chan string) {
@@ -49,6 +51,12 @@ type ExecRes struct {
 }
 
 func main() {
+	_, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "javascript", 0)
+	if err != nil {
+		log.Fatal("failed to dial leader:", err)
+	}
+
+	return
 	wd, err := os.Getwd()
 	if err != nil {
 		panic(err)
